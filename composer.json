@@ -1,8 +1,8 @@
 {
-  "name": "springdvs/nodelib",
-  "description": "Library for SpringDVS nodes",
+  "name": "springdvs/netlib",
+  "description": "Library for SpringDVS network layer",
   "license": "Apache-2.0",
-  "version": "1.0.0",
+  "version": "dev-master",
   "authors": [
     {
       "name": "Care Connections Initiative c.i.c",
@@ -14,7 +14,8 @@
   },
   "autoload": {
     "psr-4": {
-      "SpringDVS": "src/"
-    }
+      "SpringDvs\\": "src/"
+    },
+    "files": ["src/BinHelpers.php", "src/ProtocolCommon.php"]
   }
 }
