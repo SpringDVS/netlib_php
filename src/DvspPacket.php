@@ -1,4 +1,3 @@
-
 <?php
 /* Notice:  Copyright 2016, The Care Connections Initiative c.i.c.
  * Author:  Charlie Fyvie-Gauld <cfg@zunautica.org>
