@@ -1,7 +1,11 @@
-<?php
 
+<?php
+/* Notice:  Copyright 2016, The Care Connections Initiative c.i.c.
+ * Author:  Charlie Fyvie-Gauld <cfg@zunautica.org>
+ * License: Apache License, Version 2 (http://www.apache.org/licenses/LICENSE-2.0)
+ */
 namespace SpringDvs;
-class DvspPacket {
+class DvspPacket implements iNetSerial {
 	private $m_header;
 	private $m_content;
 	
@@ -110,9 +114,12 @@ class DvspPacket {
 	 * string
 	 * 
 	 * @param string $bytes The bytes making up the serial
-	 * @return \SpringDvs\DvspPacket
+	 * @return \SpringDvs\DvspPacket or false on failure
 	 */
 	public static function deserialise($bytes) {
+		
+		if(strlen($bytes) < DvspPacket::lowerBound()) return false;
+			
 		$v = unpack("Ctype/Cpart/Lsize/C4origin/C4dest", $bytes);
 		$p = new DvspPacket();
 		$p->m_header->type = $v['type'];
@@ -130,5 +137,15 @@ class DvspPacket {
 		$p->m_header->addr_dest[3] = $v['dest4'];
 		$p->copyContent(DvspPacket::extractFrame($bytes));
 		return $p;
+	}
+	
+	/**
+	 * Get the lower bound number of bytes of a Packet
+	 * 
+	 * @returns int The number of bytes
+	 */
+	
+	public static function lowerBound() {
+		14;
 	}
 }
