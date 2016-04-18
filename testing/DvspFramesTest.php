@@ -4,33 +4,38 @@ require 'auto.php';
 class DvspFramesTest extends PHPUnit_Framework_TestCase {
 	
 	public function testRegisterFrame_Ctor() {
-		$f = new SpringDvs\FrameRegister(
+		$f = new SpringDvs\FrameRegistration(
+				true,
 				SpringDvs\NetnodeType::org,
 				SpringDvs\ServiceProtocol::http,
-				"Foobar");
+				"Spring,Foobar");
 		
+		$this->assertEquals( true, $f->register );
 		$this->assertEquals( SpringDvs\NetnodeType::org, $f->type );
-		$this->assertEquals( SpringDvs\ServiceProtocol::http, $f->protocol );
-		$this->assertEquals( 6, $f->len );
-		$this->assertEquals( "Foobar", $f->hostname );	
+		$this->assertEquals( SpringDvs\ServiceProtocol::http, $f->service );
+		$this->assertEquals( 13, $f->len );
+		$this->assertEquals( "Spring,Foobar", $f->nodereg );	
 	}
 	
 	public function testRegisterFrame_SerialiseDeserialise() {
-		$s = new SpringDvs\FrameRegister(
+		$s = new SpringDvs\FrameRegistration(
+				true,
 				SpringDvs\NetnodeType::org,
 				SpringDvs\ServiceProtocol::http,
-				"Foobar");
+				"Spring,Foobar");
 		
 		$bytes = $s->serialise();
 		
-		$f = SpringDvs\FrameRegister::deserialise($bytes);
+		$f = SpringDvs\FrameRegistration::deserialise($bytes);
 		
+		$this->assertEquals( true, $f->register );
 		$this->assertEquals( SpringDvs\NetnodeType::org, $f->type );
-		$this->assertEquals( SpringDvs\ServiceProtocol::http, $f->protocol );
-		$this->assertEquals( 6, $f->len );
-		$this->assertEquals( "Foobar", $f->hostname );
+		$this->assertEquals( SpringDvs\ServiceProtocol::http, $f->service );
+		$this->assertEquals( 13, $f->len );
+		$this->assertEquals( "Spring,Foobar", $f->nodereg );
 	}
-	
+
+/*	
 	public function testFrameResponse_Ctor() {
 		$f = new SpringDvs\FrameResponse(SpringDvs\DvspRcode::malformed_content);
 		
@@ -61,5 +66,7 @@ class DvspFramesTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(6, $f->len);
 		$this->assertEquals("FooBar", $f->result);
 	}
+ */
+ 
 };
 
