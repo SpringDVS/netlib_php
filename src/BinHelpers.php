@@ -20,3 +20,7 @@ function rcode_to_string($code) {
 		default: return "Unknown";
 	}
 }
+
+function hex_to_bin($str) {
+	return pack("H*" , $str);
+}
