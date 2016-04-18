@@ -49,25 +49,6 @@ class DvspFramesTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(SpringDvs\DvspRcode::malformed_content, $f->code);
 	}
 
-/*	
-	public function testFrameService_Ctor() {
-		$f = new SpringDvs\FrameService("FooBar");
-		
-		$this->assertEquals(SpringDvs\DvspRcode::ok, $f->response);
-		$this->assertEquals(6, $f->len);
-		$this->assertEquals("FooBar", $f->result);
-	}
-
-	public function testFrameService_SerialiseDeserialise() {
-		$s = new SpringDvs\FrameService("FooBar");
-		$bytes = $s->serialise();
-		$f = SpringDvs\FrameService::deserialise($bytes);
-
-		$this->assertEquals(SpringDvs\DvspRcode::ok, $f->response);
-		$this->assertEquals(6, $f->len);
-		$this->assertEquals("FooBar", $f->result);
-	}
- */
  
 };
 
