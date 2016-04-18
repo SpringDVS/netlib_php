@@ -7,39 +7,52 @@
 namespace SpringDvs;
 
 
-class ServiceProtocol {
-	const dvsp = 0;
-	const http = 1;
+class DvspService {
+	const unspecified = 0;
+	const dvsp = 1;
+	const http = 2;
 }
 
-class NetnodeType {
+class DvspNodeType {
 	const undefined = 0;
 	const root = 1;
 	const org = 2;
-	const trusted = 3;
-	const georoot = 4;
 }
 
 class DvspMsgType {
 	const undefined = 0;
-	const gsn_register_host = 1;
-	const gsn_unregister_host = 2;
+	const gsn_registration = 1;
+	const gsn_resolution = 2;
 	
-	const gsn_resolution = 3;
-	const gsn_local_area = 4;
-	const gsn_root_nods = 5;
-	const gsn_hostname = 6;
+	const gsn_area = 3;
+	const gsn_state = 4;
+	const gsn_node_info = 5;
+	const gsn_node_status = 6;
 	
 	const gsn_request = 7;
-	const gsn_response = 8;
-	const gsn_payload = 9;
-	const gtn_root_nodes = 10;
+	const gsn_type_request = 8;
+
+	const gtn_geosub = 21;
+	const gtn_registration = 22;
+	const gtn_geosub_nodes = 23;
+	
+	const gsn_response = 30;
+	const gsn_response_node_info = 31;
+	const gsn_response_network = 32;
+	const gsn_response_high = 33;
 }
 
 class DvspRcode {
 	const netspace_error = 101;
-	const network_error = 102;
-	const malformed_content = 103;
+	const netspace_duplication = 102;
+	const network_error = 103;
+	const malformed_content = 104;
 	const ok = 200;
-	const fake_udp = 505;
+}
+
+class DvspNodeState {
+	const disabled = 0;
+	const enabled = 1;
+	const unresponsive = 2;
+	const unspecified = 3;
 }
