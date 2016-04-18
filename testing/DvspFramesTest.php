@@ -35,7 +35,7 @@ class DvspFramesTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals( "Spring,Foobar", $f->nodereg );
 	}
 
-/*	
+	
 	public function testFrameResponse_Ctor() {
 		$f = new SpringDvs\FrameResponse(SpringDvs\DvspRcode::malformed_content);
 		
@@ -46,9 +46,10 @@ class DvspFramesTest extends PHPUnit_Framework_TestCase {
 		$s = new SpringDvs\FrameResponse(SpringDvs\DvspRcode::malformed_content);
 		$bytes = $s->serialise();
 		$f = SpringDvs\FrameResponse::deserialise($bytes);
-		$this->assertEquals(SpringDvs\DvspRcode::malformed_content, $f->code);		
+		$this->assertEquals(SpringDvs\DvspRcode::malformed_content, $f->code);
 	}
-	
+
+/*	
 	public function testFrameService_Ctor() {
 		$f = new SpringDvs\FrameService("FooBar");
 		
