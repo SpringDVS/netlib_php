@@ -69,7 +69,7 @@ class DvspPacket implements iNetSerial {
 	}
 	
 	public function contentAs($type) {
-		return call_user_func($type."::deserialise", $this->m_content);
+		return call_user_func("\\SpringDvs\\".$type."::deserialise", $this->m_content);
 	}
 	
 	/**
