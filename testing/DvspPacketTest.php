@@ -38,10 +38,10 @@ class DvspPacketTest extends PHPUnit_Framework_TestCase
 	}
 	
 	public function testStaticConstruct_Empty() {
-		$packet = SpringDvs\DvspPacket::ofType(SpringDvs\DvspMsgType::gsn_register_host);
+		$packet = SpringDvs\DvspPacket::ofType(SpringDvs\DvspMsgType::gsn_registration);
 
 		$this->assertEquals(
-			SpringDvs\DvspMsgType::gsn_register_host,
+			SpringDvs\DvspMsgType::gsn_registration,
 			$packet->header()->type			
 		);
 		
@@ -53,12 +53,12 @@ class DvspPacketTest extends PHPUnit_Framework_TestCase
 
 	public function testStaticConstruct_Full() {
 		$packet = SpringDvs\DvspPacket::ofType(
-				SpringDvs\DvspMsgType::gsn_register_host,
+				SpringDvs\DvspMsgType::gsn_registration,
 				"FooBar"
 			);
 
 		$this->assertEquals(
-			SpringDvs\DvspMsgType::gsn_register_host,
+			SpringDvs\DvspMsgType::gsn_registration,
 			$packet->header()->type
 		);
 		
@@ -74,82 +74,106 @@ class DvspPacketTest extends PHPUnit_Framework_TestCase
 	}
 	
 	public function testStaticConstruct_FullFrame() {
-		$frame = new SpringDvs\FrameRegister(
-			SpringDvs\NetnodeType::org,
-			SpringDvs\ServiceProtocol::http,
+		$frame = new SpringDvs\FrameRegistration(
+			true,
+			SpringDvs\DvspNodeType::org,
+			SpringDvs\DvspService::http,
 			"Foobar"
 		);
 
 		$packet = SpringDvs\DvspPacket::ofType(
-				SpringDvs\DvspMsgType::gsn_register_host,
+				SpringDvs\DvspMsgType::gsn_registration,
 				$frame->serialise()
 		);
 		
-		$f = SpringDvs\FrameRegister::deserialise($packet->content());
+		$f = SpringDvs\FrameRegistration::deserialise($packet->content());
 
 		$this->assertEquals(
-			SpringDvs\DvspMsgType::gsn_register_host,
+			SpringDvs\DvspMsgType::gsn_registration,
 			$packet->header()->type
 		);	
 		
-		$this->assertEquals( SpringDvs\NetnodeType::org, $f->type );
-		$this->assertEquals( SpringDvs\ServiceProtocol::http, $f->protocol );
+		$this->assertEquals( SpringDvs\DvspNodeType::org, $f->type );
+		$this->assertEquals( SpringDvs\DvspService::http, $f->service);
 		$this->assertEquals( 6, $f->len );
-		$this->assertEquals( "Foobar", $f->hostname );
+		$this->assertEquals( "Foobar", $f->nodereg );
 	}
 	
 	public function testSerialise_ExtractFrame() {
-		$frame = new SpringDvs\FrameRegister(
-			SpringDvs\NetnodeType::org,
-			SpringDvs\ServiceProtocol::http,
+		$frame = new SpringDvs\FrameRegistration(
+			true,
+			SpringDvs\DvspNodeType::org,
+			SpringDvs\DvspService::http,
 			"Foobar"
 		);
 
 		$packet = SpringDvs\DvspPacket::ofType(
-				SpringDvs\DvspMsgType::gsn_register_host,
+				SpringDvs\DvspMsgType::gsn_registration,
 				$frame->serialise()
 		);
 		
 		$bytes = $packet->serialise();
 		
-		$f = SpringDvs\FrameRegister::deserialise(SpringDvs\DvspPacket::extractFrame($bytes));
+		$f = SpringDvs\FrameRegistration::deserialise(SpringDvs\DvspPacket::extractFrame($bytes));
 
-		$this->assertEquals( SpringDvs\NetnodeType::org, $f->type );
-		$this->assertEquals( SpringDvs\ServiceProtocol::http, $f->protocol );
+		$this->assertEquals( SpringDvs\DvspNodeType::org, $f->type );
+		$this->assertEquals( SpringDvs\DvspService::http, $f->service );
 		$this->assertEquals( 6, $f->len );
-		$this->assertEquals( "Foobar", $f->hostname );
+		$this->assertEquals( "Foobar", $f->nodereg );
 	}
 	
-	public function testSerialiseDeserialise() {
-		$frame = new SpringDvs\FrameRegister(
-			SpringDvs\NetnodeType::org,
-			SpringDvs\ServiceProtocol::http,
+	public function testContentAs() {
+		$frame = new SpringDvs\FrameRegistration(
+			true,
+			SpringDvs\DvspNodeType::org,
+			SpringDvs\DvspService::http,
 			"Foobar"
 		);
 
 		$packet = SpringDvs\DvspPacket::ofType(
-				SpringDvs\DvspMsgType::gsn_register_host,
+				SpringDvs\DvspMsgType::gsn_registration,
+				$frame->serialise()
+		);
+		
+		$f = $packet->contentAs(\SpringDvs\FrameRegistration::contentType());
+
+		$this->assertEquals( SpringDvs\DvspNodeType::org, $f->type );
+		$this->assertEquals( SpringDvs\DvspService::http, $f->service );
+		$this->assertEquals( 6, $f->len );
+		$this->assertEquals( "Foobar", $f->nodereg );
+	}
+	
+	public function testSerialiseDeserialise() {
+		$frame = new SpringDvs\FrameRegistration(
+			true,
+			SpringDvs\DvspNodeType::org,
+			SpringDvs\DvspService::http,
+			"Foobar"
+		);
+
+		$packet = SpringDvs\DvspPacket::ofType(
+				SpringDvs\DvspMsgType::gsn_registration,
 				$frame->serialise()
 		);
 
 		$bytes = $packet->serialise();
 
 		$p = SpringDvs\DvspPacket::deserialise($bytes);
-		$f = SpringDvs\FrameRegister::deserialise($packet->content());
+		$f = SpringDvs\FrameRegistration::deserialise($packet->content());
 		
 		$this->assertEquals(
-			SpringDvs\DvspMsgType::gsn_register_host,
+			SpringDvs\DvspMsgType::gsn_registration,
 			$p->header()->type
 		);
 		
 		$this->assertEquals(
-			9,
+			SpringDvs\FrameRegistration::lowerBound() + 6,
 			$p->header()->size
 		);
 
-		$this->assertEquals( SpringDvs\NetnodeType::org, $f->type );
-		$this->assertEquals( SpringDvs\ServiceProtocol::http, $f->protocol );
+		$this->assertEquals( SpringDvs\DvspNodeType::org, $f->type );
+		$this->assertEquals( SpringDvs\DvspService::http, $f->service );
 		$this->assertEquals( 6, $f->len );
-		$this->assertEquals( "Foobar", $f->hostname );
+		$this->assertEquals( "Foobar", $f->nodereg );
 	}
 }
