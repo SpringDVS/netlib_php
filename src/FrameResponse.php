@@ -6,7 +6,7 @@
 
 namespace SpringDvs;
 
-class FrameResponse implements iNetSerial
+class FrameResponse implements iFrame
 {
 	public $code;
 
@@ -25,7 +25,16 @@ class FrameResponse implements iNetSerial
 		return new FrameResponse($v['val']);
 	}
 	
+	public function json_encode() {
+		return json_encode(array( 'code' => $this->code ));
+	}
+
+
 	public static function lowerBound() {
 		4;
+	}
+	
+	public static function contentType() {
+		return "FrameResponse";
 	}
 }

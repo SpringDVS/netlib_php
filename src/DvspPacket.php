@@ -22,7 +22,7 @@ class DvspPacket implements iNetSerial {
 		);
 		$this->m_content = "";
 		$this->m_header->size = 0;
-		$this->m_header->type = NetnodeType::undefined;
+		$this->m_header->type = DvspNodeType::undefined;
 	}
 	
 	/**
@@ -66,6 +66,10 @@ class DvspPacket implements iNetSerial {
 	*/
 	public function content() {
 		return $this->m_content;
+	}
+	
+	public function contentAs($type) {
+		return call_user_func($type."::deserialise", $this->m_content);
 	}
 	
 	/**
@@ -138,6 +142,13 @@ class DvspPacket implements iNetSerial {
 		return $p;
 	}
 	
+	
+	public function json_encode() {
+		return json_encode(array(
+				'type' => $this->m_header->type,
+				'part' => $this->m_header->part,
+				));
+	}
 	/**
 	 * Get the lower bound number of bytes of a Packet
 	 * 

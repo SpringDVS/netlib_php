@@ -5,7 +5,7 @@
  */
 
 namespace SpringDvs;
-class FrameRegistration implements iNetSerial {
+class FrameRegistration implements iFrame {
 	public $register;
 	public $type;
 	public $len;
@@ -60,6 +60,20 @@ class FrameRegistration implements iNetSerial {
 			);
 	}
 	
+	public function json_encode() {
+		return json_encode(array(
+			'register' => $this->register,
+			'type' => $this->type,
+			'len' => $this->len,
+			'service' => $this->service,
+			'nodereg' => $this->nodereg
+		));
+	}
+	
+	public static function contentType() {
+		return "FrameRegistration";
+	}
+
 	/**
 	 * Get the lower bound number of bytes for frame
 	 * @return int Number of bytes
