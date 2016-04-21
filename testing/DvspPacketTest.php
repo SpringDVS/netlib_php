@@ -176,4 +176,20 @@ class DvspPacketTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals( 6, $f->len );
 		$this->assertEquals( "Foobar", $f->nodereg );
 	}
+	
+	public function testJsonEncode() {
+		$f = new SpringDvs\FrameRegistration(
+					true,
+					SpringDvs\DvspNodeType::org,
+					SpringDvs\DvspService::http,
+					"Foobar"
+				); 
+
+		$packet = SpringDvs\DvspPacket::ofType(
+				SpringDvs\DvspMsgType::gsn_registration,
+				$f->serialise()
+			);
+
+		$json = $packet->json_encode(SpringDvs\FrameRegistration::contentType());
+	}
 }

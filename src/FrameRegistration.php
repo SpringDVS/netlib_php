@@ -60,14 +60,14 @@ class FrameRegistration implements iFrame {
 			);
 	}
 	
-	public function json_encode() {
-		return json_encode(array(
+	public function json_encode($option = '') {
+		return array(
 			'register' => $this->register,
 			'type' => $this->type,
 			'len' => $this->len,
 			'service' => $this->service,
 			'nodereg' => $this->nodereg
-		));
+		);
 	}
 	
 	public static function contentType() {

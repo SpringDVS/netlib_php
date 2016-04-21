@@ -53,7 +53,7 @@ class DvspPacket implements iNetSerial {
 	/**
 	* Returns reference to the frame header
 	*
-	* @return SpringDvs\DvspHeader The header of the frame
+	* @return \SpringDvs\DvspHeader The header of the frame
 	*/
 	public function &header() {
 		return $this->m_header;
@@ -68,6 +68,13 @@ class DvspPacket implements iNetSerial {
 		return $this->m_content;
 	}
 	
+	/**
+	 * A fake-generic function to auto deserialise the contents of a packet
+	 * into the specified frame
+	 * 
+	 * @param string $type The string representation of a frame
+	 * @return iFrame-derived-frame|bool Successfully deserialised frame, otherwise false
+	 */
 	public function contentAs($type) {
 		return call_user_func("\\SpringDvs\\".$type."::deserialise", $this->m_content);
 	}
@@ -142,13 +149,33 @@ class DvspPacket implements iNetSerial {
 		return $p;
 	}
 	
-	
-	public function json_encode() {
+	/**
+	 * Encode the packet and frame in JSON format
+	 * 
+	 * @param string $frameType The "Generic" construction of frame
+	 * @return string | bool String on successful encoding, otherwise false
+	 */
+	public function json_encode($frameType = '') {
+		$content = '';
+		if($frameType == '') {
+			$content = $this->m_content;
+		} else {
+			$frame = $this->contentAs($frameType);
+			if($frame === false) {
+				return false;
+			}
+
+			$content = $frame->json_encode();
+		}
 		return json_encode(array(
 				'type' => $this->m_header->type,
-				'part' => $this->m_header->part,
+				'part' => $this->m_header->part ? 1: 0,
+				'frame' => $frameType,
+				'content' => $content,
 				));
 	}
+	
+
 	/**
 	 * Get the lower bound number of bytes of a Packet
 	 * 

@@ -25,8 +25,8 @@ class FrameResponse implements iFrame
 		return new FrameResponse($v['val']);
 	}
 	
-	public function json_encode() {
-		return json_encode(array( 'code' => $this->code ));
+	public function json_encode($option = '') {
+		return array( 'code' => $this->code );
 	}
 
 
