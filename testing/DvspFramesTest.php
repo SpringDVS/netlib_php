@@ -6,13 +6,13 @@ class DvspFramesTest extends PHPUnit_Framework_TestCase {
 	public function testRegisterFrame_Ctor() {
 		$f = new SpringDvs\FrameRegistration(
 				true,
-				SpringDvs\NetnodeType::org,
-				SpringDvs\ServiceProtocol::http,
+				SpringDvs\DvspNodeType::org,
+				SpringDvs\DvspService::http,
 				"Spring,Foobar");
 		
 		$this->assertEquals( true, $f->register );
-		$this->assertEquals( SpringDvs\NetnodeType::org, $f->type );
-		$this->assertEquals( SpringDvs\ServiceProtocol::http, $f->service );
+		$this->assertEquals( SpringDvs\DvspNodeType::org, $f->type );
+		$this->assertEquals( SpringDvs\DvspService::http, $f->service );
 		$this->assertEquals( 13, $f->len );
 		$this->assertEquals( "Spring,Foobar", $f->nodereg );	
 	}
@@ -20,8 +20,8 @@ class DvspFramesTest extends PHPUnit_Framework_TestCase {
 	public function testRegisterFrame_SerialiseDeserialise() {
 		$s = new SpringDvs\FrameRegistration(
 				true,
-				SpringDvs\NetnodeType::org,
-				SpringDvs\ServiceProtocol::http,
+				SpringDvs\DvspNodeType::org,
+				SpringDvs\DvspService::http,
 				"Spring,Foobar");
 		
 		$bytes = $s->serialise();
@@ -29,8 +29,8 @@ class DvspFramesTest extends PHPUnit_Framework_TestCase {
 		$f = SpringDvs\FrameRegistration::deserialise($bytes);
 		
 		$this->assertEquals( true, $f->register );
-		$this->assertEquals( SpringDvs\NetnodeType::org, $f->type );
-		$this->assertEquals( SpringDvs\ServiceProtocol::http, $f->service );
+		$this->assertEquals( SpringDvs\DvspNodeType::org, $f->type );
+		$this->assertEquals( SpringDvs\DvspService::http, $f->service );
 		$this->assertEquals( 13, $f->len );
 		$this->assertEquals( "Spring,Foobar", $f->nodereg );
 	}
