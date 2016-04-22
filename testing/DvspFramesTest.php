@@ -133,5 +133,18 @@ class DvspFramesTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals( 13, $f->len );
 		$this->assertEquals( "Spring,Foobar", $f->nodereg );
 	}
+	
+	public function testFrameNodeStatusSerialiseDeserialise() {
+		$in = new SpringDvs\FrameNodeStatus(
+			SpringDvs\DvspNodeState::unresponsive
+		);
+		
+		$bytes = $in->serialise();
+		
+		$out = SpringDvs\FrameNodeStatus::deserialise($bytes);
+		
+		$this->assertEquals($in->code, $out->code);	
+		$this->assertEquals($in->status, $out->status);	
+	}
 };
 
