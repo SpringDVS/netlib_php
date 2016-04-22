@@ -117,5 +117,21 @@ class DvspFramesTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals($in->url, $out->url);
 	}
+	
+	public function testFrameGtnRegistrationSerialiseDeserialise() {
+		$s = new SpringDvs\FrameGtnRegistration(
+				true,
+				SpringDvs\DvspService::http,
+				"Spring,Foobar");
+		
+		$bytes = $s->serialise();
+		
+		$f = SpringDvs\FrameGtnRegistration::deserialise($bytes);
+		
+		$this->assertEquals( true, $f->register );
+		$this->assertEquals( SpringDvs\DvspService::http, $f->service );
+		$this->assertEquals( 13, $f->len );
+		$this->assertEquals( "Spring,Foobar", $f->nodereg );
+	}
 };
 
