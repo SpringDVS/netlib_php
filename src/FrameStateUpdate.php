@@ -2,6 +2,9 @@
 
 namespace SpringDvs;
 
+/**
+ * Used for updating the status of the node with the network
+ */
 class FrameStateUpdate implements iFrame {
 	public $state;
 	public $springname;
