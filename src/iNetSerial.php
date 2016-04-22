@@ -15,7 +15,7 @@ namespace SpringDvs;
 
 interface iNetSerial {
 	public function serialise();
-	public function json_encode($option);
+	public function jsonEncode($option);
 	public static function deserialise($bytes);
 	public static function lowerBound();
 	

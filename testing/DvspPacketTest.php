@@ -190,6 +190,6 @@ class DvspPacketTest extends PHPUnit_Framework_TestCase
 				$f->serialise()
 			);
 
-		$json = $packet->json_encode(SpringDvs\FrameRegistration::contentType());
+		$json = $packet->jsonEncode(SpringDvs\FrameRegistration::contentType());
 	}
 }

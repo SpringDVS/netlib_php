@@ -155,7 +155,7 @@ class DvspPacket implements iNetSerial {
 	 * @param string $frameType The "Generic" construction of frame
 	 * @return string | bool String on successful encoding, otherwise false
 	 */
-	public function json_encode($frameType = '') {
+	public function jsonEncode($frameType = '') {
 		$content = '';
 		if($frameType == '') {
 			$content = $this->m_content;
@@ -165,7 +165,7 @@ class DvspPacket implements iNetSerial {
 				return false;
 			}
 
-			$content = $frame->json_encode();
+			$content = $frame->jsonEncode();
 		}
 		return json_encode(array(
 				'type' => $this->m_header->type,
