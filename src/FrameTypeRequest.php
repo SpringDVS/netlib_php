@@ -23,7 +23,7 @@ class FrameTypeRequest implements iFrame {
 		return new FrameTypeRequest($v['type']);
 	}
 	
-	public function jsonEncode($option) {
+	public function jsonEncode($option = '') {
 		return array('type' => $this->type);
 	}
 	

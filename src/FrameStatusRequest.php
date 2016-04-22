@@ -34,7 +34,7 @@ class FrameStatusRequest {
 		return "FrameStatusRequest";
 	}
 	
-	public function jsonEncode($option) {
+	public function jsonEncode($option = '') {
 		return array('node' => $this->node);
 	}
 }

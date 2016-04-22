@@ -28,7 +28,7 @@ class FrameResolution {
 		return "FrameResolution";
 	}
 	
-	public function jsonEncode($option) {
+	public function jsonEncode($option = '') {
 		return array('url' => $this->url);
 	}
 }
