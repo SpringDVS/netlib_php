@@ -108,5 +108,14 @@ class DvspFramesTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals($in->type, $out->type);
 	}
+	
+ 	public function testFrameResolutionSerialiseDeserialise() {
+		$in = new SpringDvs\FrameResolution("spring://cci.esusx.uk");
+		$bytes = $in->serialise();
+
+		$out = SpringDvs\FrameResolution::deserialise($bytes);
+
+		$this->assertEquals($in->url, $out->url);
+	}
 };
 
