@@ -31,7 +31,7 @@ class FrameResponse implements iFrame
 
 
 	public static function lowerBound() {
-		4;
+		return 4;
 	}
 	
 	public static function contentType() {
