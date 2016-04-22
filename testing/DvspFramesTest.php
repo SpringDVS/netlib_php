@@ -155,5 +155,14 @@ class DvspFramesTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals($in->list, $out->list);
 	}
+	
+	public function testFrameRequestSerialiseDeserialise() {
+		$in = new SpringDvs\FrameRequest("foobar");
+		$bytes = $in->serialise();
+
+		$out = SpringDvs\FrameRequest::deserialise($bytes);
+
+		$this->assertEquals($in->payload, $out->payload);
+	}
 };
 
