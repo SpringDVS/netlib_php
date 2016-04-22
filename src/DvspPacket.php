@@ -183,6 +183,6 @@ class DvspPacket implements iNetSerial {
 	 */
 	
 	public static function lowerBound() {
-		14;
+		return 14;
 	}
 }
