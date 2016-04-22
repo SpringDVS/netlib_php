@@ -48,6 +48,17 @@ class DvspFramesTest extends PHPUnit_Framework_TestCase {
 		$f = SpringDvs\FrameResponse::deserialise($bytes);
 		$this->assertEquals(SpringDvs\DvspRcode::malformed_content, $f->code);
 	}
+	
+	
+	public function testFrameStateUpdateSerialiseDeserialise() {
+		$in = new SpringDvs\FrameStateUpdate(SpringDvs\DvspNodeState::enabled, "foobar");
+		$bytes = $in->serialise();
+
+		$out = SpringDvs\FrameStateUpdate::deserialise($bytes);
+
+		$this->assertEquals($in->state, $out->state);
+		$this->assertEquals($in->springname, $out->springname);
+	}
 
  
 };
