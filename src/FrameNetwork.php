@@ -13,7 +13,7 @@ namespace SpringDvs;
  *
  * @author cfg
  */
-class FrameNetwork {
+class FrameNetwork implements iFrame {
 	public $list;
 	
 	public function __construct($list) {
