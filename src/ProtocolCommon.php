@@ -40,6 +40,7 @@ class DvspMsgType {
 	const gsn_response_node_info = 31;
 	const gsn_response_network = 32;
 	const gsn_response_high = 33;
+	const gsn_response_status = 34;
 }
 
 class DvspRcode {
