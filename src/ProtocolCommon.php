@@ -57,3 +57,10 @@ class DvspNodeState {
 	const unresponsive = 2;
 	const unspecified = 3;
 }
+
+class UnitTestAction {
+	const undefine = 0;
+	const reset = 1;
+	const update_address = 2;
+	const add_geosub_root = 3;
+}

@@ -173,5 +173,25 @@ class DvspFramesTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals($in->geosub, $out->geosub);
 	}
+
+	public function testFrameUnitTestSerialiseDeserialise() {
+		$in = new SpringDvs\FrameUnitTest(\SpringDvs\UnitTestAction::reset);
+		$bytes = $in->serialise();
+
+		$out = SpringDvs\FrameUnitTest::deserialise($bytes);
+
+		$this->assertEquals($in->action, $out->action);
+		$this->assertEquals($in->extra, $out->extra);
+	}
+
+	public function testFrameUnitTestExtraSerialiseDeserialise() {
+		$in = new SpringDvs\FrameUnitTest(\SpringDvs\UnitTestAction::update_address, "foobar");
+		$bytes = $in->serialise();
+
+		$out = SpringDvs\FrameUnitTest::deserialise($bytes);
+
+		$this->assertEquals($in->action, $out->action);
+		$this->assertEquals($in->extra, $out->extra);
+	}
 };
 
