@@ -28,3 +28,7 @@ function rcode_to_string($code) {
 function hex_to_bin($str) {
 	return pack("H*" , $str);
 }
+
+function bin_to_hex($str) {
+	return bin2hex($str);
+}
