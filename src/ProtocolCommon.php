@@ -41,6 +41,8 @@ class DvspMsgType {
 	const gsn_response_network = 32;
 	const gsn_response_high = 33;
 	const gsn_response_status = 34;
+	
+	const unit_test = 101;
 }
 
 class DvspRcode {
