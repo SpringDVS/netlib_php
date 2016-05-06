@@ -8,11 +8,14 @@ class DvspFramesTest extends PHPUnit_Framework_TestCase {
 				true,
 				SpringDvs\DvspNodeType::org,
 				SpringDvs\DvspService::http,
-				"Spring,Foobar");
+				"Spring,Foobar",
+				"14758f1afd44c09b7992073ccf00b43d"
+				);
 		
 		$this->assertEquals( true, $f->register );
 		$this->assertEquals( SpringDvs\DvspNodeType::org, $f->type );
 		$this->assertEquals( SpringDvs\DvspService::http, $f->service );
+		$this->assertEquals( "14758f1afd44c09b7992073ccf00b43d", $f->token );
 		$this->assertEquals( 13, $f->len );
 		$this->assertEquals( "Spring,Foobar", $f->nodereg );	
 	}
@@ -22,7 +25,9 @@ class DvspFramesTest extends PHPUnit_Framework_TestCase {
 				true,
 				SpringDvs\DvspNodeType::org,
 				SpringDvs\DvspService::http,
-				"Spring,Foobar");
+				"Spring,Foobar",
+				"14758f1afd44c09b7992073ccf00b43d"
+				);
 		
 		$bytes = $s->serialise();
 		
@@ -31,6 +36,7 @@ class DvspFramesTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals( true, $f->register );
 		$this->assertEquals( SpringDvs\DvspNodeType::org, $f->type );
 		$this->assertEquals( SpringDvs\DvspService::http, $f->service );
+		$this->assertEquals( "14758f1afd44c09b7992073ccf00b43d", $f->token );
 		$this->assertEquals( 13, $f->len );
 		$this->assertEquals( "Spring,Foobar", $f->nodereg );
 	}

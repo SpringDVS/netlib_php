@@ -11,6 +11,7 @@ class FrameRegistration implements iFrame {
 	public $len;
 	public $service;
 	public $nodereg;
+	public $token;
 	
 	/**
 	 * Construct a gsn_registration frame to register with the node
@@ -21,11 +22,12 @@ class FrameRegistration implements iFrame {
 	 * @param \SpringDvs\ServiceProtocol $service The Service Protocol
 	 * @param type $hostname The hostname of the node
 	 */
-	public function __construct($register, $type, $service, $nodereg) {
+	public function __construct($register, $type, $service, $nodereg, $token) {
 		$this->register = $register;
 		$this->type = $type;
 		$this->nodereg = $nodereg;
 		$this->service = $service;
+		$this->token = $token;
 		$this->len = strlen($nodereg);
 	}
 	
@@ -37,6 +39,7 @@ class FrameRegistration implements iFrame {
 		$this->len = strlen($this->nodereg);
 		$reg = $this->register ? 1 : 0;
 		$frame = pack("cccc", $reg, $this->type, $this->len, $this->service);
+		$frame .= pack_chars($this->token);
 		$frame .= pack_chars($this->nodereg);
 		return $frame;
 	}
@@ -56,7 +59,8 @@ class FrameRegistration implements iFrame {
 				($v["reg"] == 1) ? true : false,
 				$v['type'],
 				$v['service'],
-				substr($bytes, 4)
+				substr($bytes, 36),
+				substr($bytes, 4, 32)				
 			);
 	}
 	
@@ -66,6 +70,7 @@ class FrameRegistration implements iFrame {
 			'type' => $this->type,
 			'len' => $this->len,
 			'service' => $this->service,
+			'token' => $this->token,
 			'nodereg' => $this->nodereg
 		);
 	}
@@ -80,6 +85,6 @@ class FrameRegistration implements iFrame {
 	 */
 	
 	public static function lowerBound() {
-		return 4;
+		return 36;
 	}
 }
