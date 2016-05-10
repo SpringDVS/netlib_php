@@ -14,11 +14,11 @@ class DvspPacket implements iNetSerial {
 	public function __construct() {
 		$this->m_header = new DvspHeader();
 		$this->m_header->addr_origin = array(
-			127,0,0,1
+			0,0,0,0
 		);
 		
 		$this->m_header->addr_dest = array(
-			127,0,0,1
+			0,0,0,0
 		);
 		$this->m_content = "";
 		$this->m_header->size = 0;
