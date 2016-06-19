@@ -10,9 +10,7 @@ class FormatsTest extends PHPUnit_Framework_TestCase {
 	
 	public function testNodeSingle_ToStr_Pass() {
 		$fmt = SpringDvs\NodeSingleFmt::fromStr("spring");
-		ob_start();
-		$fmt->toStr();
-		$this->assertEquals(ob_get_clean(), "spring" );
+		$this->assertEquals($fmt->toStr(), "spring" );
 	}
 	
 	
@@ -24,9 +22,7 @@ class FormatsTest extends PHPUnit_Framework_TestCase {
 	
 	public function testNodeDouble_ToStr_Pass() {
 		$fmt = SpringDvs\NodeDoubleFmt::fromStr("spring,host");
-		ob_start();
-		$fmt->toStr();
-		$this->assertEquals(ob_get_clean(), "spring,host" );
+		$this->assertEquals($fmt->toStr(), "spring,host" );
 	}
 	
 	public function testNodeDouble_FromStr_Fail() {
@@ -66,9 +62,7 @@ class FormatsTest extends PHPUnit_Framework_TestCase {
 	
 	public function testNodeQuad_ToStr_Pass() {
 		$fmt = SpringDvs\NodeQuadFmt::fromStr("spring,host,127.0.0.1,http");
-		ob_start();
-		$fmt->toStr();
-		$this->assertEquals(ob_get_clean(), "spring,host,127.0.0.1,http" );
+		$this->assertEquals($fmt->toStr(), "spring,host,127.0.0.1,http" );
 	}
 	
 	public function testNodeQuad_FromStr_Fail() {
