@@ -1,4 +1,12 @@
 <?php
+use SpringDvs\CmdType;
+use SpringDvs\NodeRole;
+use SpringDvs\NodeService;
+use SpringDvs\ContentInfoRequest;
+use SpringDvs\NodeProperty;
+use SpringDvs\NodeState;
+use SpringDvs\ProtocolResponse;
+
 include 'auto.php';
 
 class MessagesTest extends PHPUnit_Framework_TestCase {
@@ -25,14 +33,16 @@ class MessagesTest extends PHPUnit_Framework_TestCase {
 
 
 	public function testContentInfoRequest_FromStr_Node_Pass() {
-		$mct = \SpringDvs\ContentInfoRequest::fromStr("node state");
+		$mct = \SpringDvs\ContentInfoRequest::fromStr("node foo state");
 		$this->assertEquals($mct->type(), \SpringDvs\ContentInfoRequest::Node);
 		$this->assertEquals($mct->get(), \SpringDvs\NodeProperty::State);
+		$this->assertEquals($mct->spring(), "foo");
 		$this->assertEquals($mct->value(), null);
 		
-		$mct = \SpringDvs\ContentInfoRequest::fromStr("node");
+		$mct = \SpringDvs\ContentInfoRequest::fromStr("node foo");
 		$this->assertEquals($mct->type(), \SpringDvs\ContentInfoRequest::Node);
 		$this->assertEquals($mct->get(), \SpringDvs\NodeProperty::All);
+		$this->assertEquals($mct->spring(), "foo");
 		$this->assertEquals($mct->value(), null);
 	}
 
@@ -44,8 +54,8 @@ class MessagesTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testContentInfoRequest_ToStr_Node_Pass() {
-		$mct = \SpringDvs\ContentInfoRequest::fromStr("node state");
-		$this->assertEquals($mct->toStr(), "node state");
+		$mct = \SpringDvs\ContentInfoRequest::fromStr("node foo state");
+		$this->assertEquals($mct->toStr(), "node foo state");
 	}
 	
 	public function testContentInfoRequest_ToStr_Network_Pass() {
@@ -63,19 +73,21 @@ class MessagesTest extends PHPUnit_Framework_TestCase {
 
 
 	public function testContentUpdate_FromStr_Pass() {
-		$mct = \SpringDvs\ContentUpdate::fromStr("state enabled");
+		$mct = \SpringDvs\ContentUpdate::fromStr("foo state enabled");
 		$this->assertEquals($mct->type(), \SpringDvs\NodeProperty::State);
 		$this->assertEquals($mct->value(), \SpringDvs\NodeState::Enabled);
+		$this->assertEquals($mct->spring(), "foo");
 	}
 	
 	public function testContentUpdate_ToStr_Pass() {
-		$mct = \SpringDvs\ContentUpdate::fromStr("state enabled");
-		$this->assertEquals($mct->toStr(), "state enabled");
+		$mct = \SpringDvs\ContentUpdate::fromStr("foo state enabled");
+		$this->assertEquals($mct->toStr(), "foo state enabled");
 	}
 	
 	public function testContentUpdate_FromStr_Fail() {
 		$this->setExpectedException('\SpringDvs\ParseFailure');
-		\SpringDvs\ContentUpdate::fromStr("brain enabled");
+		\SpringDvs\ContentUpdate::fromStr("state enabled");
+		\SpringDvs\ContentUpdate::fromStr("foo brain enabled");
 	}
 
 
@@ -168,5 +180,120 @@ class MessagesTest extends PHPUnit_Framework_TestCase {
 	public function testContentNodeSingle_ToStr_Pass() {
 		$mct = \SpringDvs\ContentNodeSingle::fromStr("foobar");
 		$this->assertEquals($mct->toStr(), "foobar");
+	}
+
+
+
+
+
+	public function testMessage_FromStr_Register_Pass() {
+		$mct = \SpringDvs\Message::fromStr("register foobar,foo.bar;org;http");
+		$this->assertEquals($mct->cmd(), CmdType::Register);
+		$this->assertEquals($mct->content()->double()->spring(), "foobar");
+		$this->assertEquals($mct->content()->double()->host(), "foo.bar");
+		$this->assertEquals($mct->content()->role(), NodeRole::Org);
+		$this->assertEquals($mct->content()->service(), NodeService::Http);
+	}
+	
+	public function testMessage_ToStr_Register_Pass() {
+		$mct = \SpringDvs\Message::fromStr("register foobar,foo.bar;org;http");
+		$this->assertEquals($mct->toStr(), "register foobar,foo.bar;org;http");
+	}
+	
+	
+	public function testMessage_FromStr_Unregister_Pass() {
+		$mct = \SpringDvs\Message::fromStr("unregister foobar");
+		$this->assertEquals($mct->cmd(), CmdType::Unregister);
+		$this->assertEquals($mct->content()->spring(), "foobar");
+	}
+	
+	public function testMessage_ToStr_Unregister_Pass() {
+		$mct = \SpringDvs\Message::fromStr("unregister foobar");
+		$this->assertEquals($mct->toStr(), "unregister foobar");
+	}
+	
+	public function testMessage_FromStr_Info_Node_Pass() {
+		$mct = \SpringDvs\Message::fromStr("info node foobar state");
+		$this->assertEquals($mct->cmd(), CmdType::Info);
+		$this->assertEquals($mct->content()->type(), ContentInfoRequest::Node);
+		$this->assertEquals($mct->content()->get(), NodeProperty::State);
+	}
+	
+	public function testMessage_ToStr_Info_Node_Pass() {
+		$mct = \SpringDvs\Message::fromStr("info node foobar state");
+		$this->assertEquals($mct->toStr(), "info node foobar state");
+	}	
+	
+	public function testMessage_FromStr_Info_Network_Pass() {
+		$mct = \SpringDvs\Message::fromStr("info network");
+		$this->assertEquals($mct->cmd(), CmdType::Info);
+		$this->assertEquals($mct->content()->type(), ContentInfoRequest::Network);
+	}
+	
+	public function testMessage_ToStr_Info_Network_Pass() {
+		$mct = \SpringDvs\Message::fromStr("info network");
+		$this->assertEquals($mct->toStr(), "info network");
+	}
+	
+	public function testMessage_FromStr_Update_Pass() {
+		$mct = \SpringDvs\Message::fromStr("update foobar state enabled");
+		$this->assertEquals($mct->cmd(), CmdType::Update);
+		$this->assertEquals($mct->content()->spring(), "foobar");
+		$this->assertEquals($mct->content()->type(), NodeProperty::State);
+		$this->assertEquals($mct->content()->value(), NodeState::Enabled);
+	}
+	
+	public function testMessage_ToStr_Update_Pass() {
+		$mct = \SpringDvs\Message::fromStr("update foobar state enabled");
+		$this->assertEquals($mct->toStr(), "update foobar state enabled");
+	}
+
+
+	public function testMessage_FromStr_Resolve_Pass() {
+		$mct = \SpringDvs\Message::fromStr("resolve spring://cci.esusx.uk");
+		$this->assertEquals($mct->cmd(), CmdType::Resolve);
+		$this->assertEquals($mct->content()->uri()->gtn(), "uk");
+	}
+	
+	public function testMessage_ToStr_Resolve_Pass() {
+		$mct = \SpringDvs\Message::fromStr("resolve spring://cci.esusx.uk");
+		$this->assertEquals($mct->toStr(), "resolve spring://cci.esusx.uk");
+	}
+	
+	public function testMessage_FromStr_Service_Pass() {
+		$mct = \SpringDvs\Message::fromStr("resolve spring://cci.esusx.uk/res");
+		$this->assertEquals($mct->cmd(), CmdType::Resolve);
+		$this->assertEquals($mct->content()->uri()->gtn(), "uk");
+	}
+	
+	public function testMessage_ToStr_Service_Pass() {
+		$mct = \SpringDvs\Message::fromStr("resolve spring://cci.esusx.uk/res");
+		$this->assertEquals($mct->toStr(), "resolve spring://cci.esusx.uk/res");
+	}
+
+
+	public function testMessage_FromStr_Response_Empty_Pass() {
+		$mct = \SpringDvs\Message::fromStr("200");
+		$this->assertEquals($mct->cmd(), CmdType::Response);
+		$this->assertEquals($mct->content()->get(), ProtocolResponse::Ok);
+	}
+	
+	public function testMessage_ToStr_Response_Empty_Pass() {
+		$mct = \SpringDvs\Message::fromStr("200");
+		$this->assertEquals($mct->toStr(), "200");
+	}
+
+
+	public function testMessage_FromStr_Response_NodeInfo_Pass() {
+		$mct = \SpringDvs\Message::fromStr("200 node spring:foobar,host:foo.bar");
+		$this->assertEquals($mct->cmd(), CmdType::Response);
+		$this->assertEquals($mct->content()->get(), ProtocolResponse::Ok);
+		$this->assertEquals($mct->content()->value()->spring(), "foobar");
+		$this->assertEquals($mct->content()->value()->host(), "foo.bar");
+	}
+	
+	public function testMessage_ToStr_Response_NodeInfo_Pass() {
+		$mct = \SpringDvs\Message::fromStr("200 node spring:foobar,host:foo.bar");
+		$this->assertEquals($mct->toStr(), "200 node spring:foobar,host:foo.bar");
 	}
 }
