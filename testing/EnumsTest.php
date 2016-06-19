@@ -92,4 +92,98 @@ class EnumsTest extends PHPUnit_Framework_TestCase {
 		$this->setExpectedException('\SpringDvs\ParseFailure');
 		$fmt = SpringDvs\CmdType::fromStr("sss");
 	}
+	
+	
+	
+	
+	
+	public function testNodeState_FromStr_Disabled_Pass() {
+		$fmt = SpringDvs\NodeState::fromStr("disabled");
+		$this->assertEquals($fmt->get(), SpringDvs\NodeState::Disabled);
+	}
+	
+	public function testNodeState_ToStr_Disabled_Pass() {
+		$fmt = SpringDvs\NodeState::fromStr("disabled");
+
+		ob_start();
+		$fmt->toStr();
+		$this->assertEquals(ob_get_clean(), "disabled" );
+	}
+
+	public function testNodeState_FromStr_Enabled_Pass() {
+		$fmt = SpringDvs\NodeState::fromStr("enabled");
+		$this->assertEquals($fmt->get(), SpringDvs\NodeState::Enabled);
+	}
+	
+	public function testNodeState_ToStr_Enabled_Pass() {
+		$fmt = SpringDvs\NodeState::fromStr("enabled");
+		ob_start();
+		$fmt->toStr();
+		$this->assertEquals(ob_get_clean(), "enabled" );
+	}
+
+	public function testNodeState_FromStr_Unresponsive_Pass() {
+		$fmt = SpringDvs\NodeState::fromStr("unresponsive");
+		$this->assertEquals($fmt->get(), SpringDvs\NodeState::Unresponsive);
+	}
+	
+	public function testNodeState_ToStr_Unresponsive_Pass() {
+		$fmt = SpringDvs\NodeState::fromStr("unresponsive");
+		ob_start();
+		$fmt->toStr();
+		$this->assertEquals(ob_get_clean(), "unresponsive" );
+	}
+
+	public function testNodeState_FromStr_Unspecified_Pass() {
+		$fmt = SpringDvs\NodeState::fromStr("unspecified");
+		$this->assertEquals($fmt->get(), SpringDvs\NodeState::Unspecified);
+	}
+	
+	public function testNodeState_ToStr_Unspecified_Pass() {
+		$fmt = SpringDvs\NodeState::fromStr("unspecified");
+		ob_start();
+		$fmt->toStr();
+		$this->assertEquals(ob_get_clean(), "unspecified" );
+	}
+
+
+
+	public function testNodeService_FromStr_Dvsp_Pass() {
+		$fmt = SpringDvs\NodeService::fromStr("dvsp");
+		$this->assertEquals($fmt->get(), SpringDvs\NodeService::Dvsp);
+	}
+	
+	public function testNodeState_ToStr_Dvsp_Pass() {
+		$fmt = SpringDvs\NodeService::fromStr("dvsp");
+	
+		ob_start();
+		$fmt->toStr();
+		$this->assertEquals(ob_get_clean(), "dvsp" );
+	}
+
+	public function testNodeService_FromStr_Http_Pass() {
+		$fmt = SpringDvs\NodeService::fromStr("http");
+		$this->assertEquals($fmt->get(), SpringDvs\NodeService::Http);
+	}
+	
+	public function testNodeState_ToStr_Http_Pass() {
+		$fmt = SpringDvs\NodeService::fromStr("http");
+	
+		ob_start();
+		$fmt->toStr();
+		$this->assertEquals(ob_get_clean(), "http" );
+	}
+
+	public function testNodeService_FromStr_Uknown_Pass() {
+		$fmt = SpringDvs\NodeService::fromStr("unknown");
+		$this->assertEquals($fmt->get(), SpringDvs\NodeService::Unknown);
+	}
+	
+	public function testNodeState_ToStr_Unknown_Pass() {
+		$fmt = SpringDvs\NodeService::fromStr("unknown");
+	
+		ob_start();
+		$fmt->toStr();
+		$this->assertEquals(ob_get_clean(), "unknown" );
+	}
 }
