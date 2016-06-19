@@ -139,4 +139,24 @@ class MessagesTest extends PHPUnit_Framework_TestCase {
 		$mct = \SpringDvs\ContentResolve::fromStr("spring://a.b.c.uk:glq/foobar");
 		$this->assertEquals($mct->toStr(), "spring://a.b.c.uk:glq/foobar");
 	}
+	
+
+
+	public function testContentService_FromStr_Pass() {
+		$mct = \SpringDvs\ContentService::fromStr("spring://a.b.c.uk:glq/foobar");
+		$uri = $mct->uri();
+		$this->assertEquals(4, count($uri->route()));
+		$this->assertEquals('uk', $uri->gtn());
+		$this->assertEquals('a', $uri->route()[0]);
+		$this->assertEquals('b', $uri->route()[1]);
+		$this->assertEquals('c', $uri->route()[2]);
+		$this->assertEquals('uk', $uri->route()[3]);
+		$this->assertEquals('glq', $uri->glq());
+		$this->assertEquals('foobar', $uri->res()[0]);
+	}
+	
+	public function testContentService_ToStr_Pass() {
+		$mct = \SpringDvs\ContentService::fromStr("spring://a.b.c.uk:glq/foobar");
+		$this->assertEquals($mct->toStr(), "spring://a.b.c.uk:glq/foobar");
+	}
 }
