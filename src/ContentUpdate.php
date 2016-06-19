@@ -4,9 +4,10 @@ namespace SpringDvs;
 
 class ContentUpdate implements IProtocolObject {
 	private $_property;
-	
-	public function __construct(NodeProperty $property) {
+	private $_spring;
+	public function __construct(NodeProperty $property, $spring) {
 		$this->_property = $property;
+		$this->_spring = $spring;
 	}
 	
 	public function type() {
@@ -17,17 +18,26 @@ class ContentUpdate implements IProtocolObject {
 		return $this->_property->value();
 	}
 	
+	public function spring() {
+		return $this->_spring;
+	}
 	
 	public static function fromStr($str) {
-		$np = NodeProperty::fromStr($str);
+		$parts = explode(" ", $str, 2);
+		
+		if(!isset($parts[1])) {
+			throw new ParseFailure(ParseFailure::InvalidContentFormat);
+		}
+
+		$np = NodeProperty::fromStr($parts[1]);
 		
 		if($np->value() == null) {
 			throw new ParseFailure(ParseFailure::InvalidContentFormat);
 		}
-		return new ContentUpdate($np);
+		return new ContentUpdate($np, $parts[0]);
 	}
 	
 	public function toStr() {
-		return $this->_property->toStr();
+		return $this->_spring . ' ' . $this->_property->toStr();
 	}
 }
