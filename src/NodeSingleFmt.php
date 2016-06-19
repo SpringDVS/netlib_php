@@ -18,6 +18,6 @@ class NodeSingleFmt implements IProtocolObject {
 	}
 	
 	public function toStr() {
-		echo $this->_spring;
+		return $this->_spring;
 	}
 }
