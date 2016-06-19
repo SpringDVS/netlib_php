@@ -28,6 +28,6 @@ class NodeDoubleFmt implements IProtocolObject {
 	}
 
 	public function toStr() {
-		echo "{$this->_spring},{$this->_host}";
+		return "{$this->_spring},{$this->_host}";
 	}
 }
