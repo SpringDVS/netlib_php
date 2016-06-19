@@ -1,6 +1,5 @@
 <?php
 
-
 include 'auto.php';
 
 class EnumsTest extends PHPUnit_Framework_TestCase {
@@ -270,5 +269,97 @@ class EnumsTest extends PHPUnit_Framework_TestCase {
 	public function testProtocolResponse_ToStr_Ok_Pass() {
 		$fmt = SpringDvs\ProtocolResponse::fromStr("200");
 		$this->assertEquals($fmt->toStr(), "200");
+	}
+
+
+
+	public function testNodeProperty_FromStr_Hostname_Pass() {
+		$fmt = SpringDvs\NodeProperty::fromStr("hostname");
+		$this->assertEquals($fmt->get(), SpringDvs\NodeProperty::Hostname);
+		$this->assertEquals($fmt->value(), null);
+
+		$fmt = SpringDvs\NodeProperty::fromStr("hostname foo.bar");
+		$this->assertEquals($fmt->get(), SpringDvs\NodeProperty::Hostname);
+		$this->assertEquals($fmt->value(), "foo.bar");
+	}
+	
+	public function testNodeProperty_ToStr_Hostname_Pass() {
+		$fmt = SpringDvs\NodeProperty::fromStr("hostname");
+		$this->assertEquals($fmt->toStr(), "hostname");
+		
+		$fmt = SpringDvs\NodeProperty::fromStr("hostname foo.bar");
+		$this->assertEquals($fmt->toStr(), "hostname foo.bar");
+	}
+	
+	public function testNodeProperty_FromStr_Address_Pass() {
+		$fmt = SpringDvs\NodeProperty::fromStr("address");
+		$this->assertEquals($fmt->get(), SpringDvs\NodeProperty::Address);
+		$this->assertEquals($fmt->value(), null);
+	
+		$fmt = SpringDvs\NodeProperty::fromStr("address 127.0.0.1");
+		$this->assertEquals($fmt->get(), SpringDvs\NodeProperty::Address);
+		$this->assertEquals($fmt->value(), "127.0.0.1");
+	}
+	
+	public function testNodeProperty_ToStr_Address_Pass() {
+		$fmt = SpringDvs\NodeProperty::fromStr("address");
+		$this->assertEquals($fmt->toStr(), "address");
+	
+		$fmt = SpringDvs\NodeProperty::fromStr("address 127.0.0.1");
+		$this->assertEquals($fmt->toStr(), "address 127.0.0.1");
+	}
+
+	public function testNodeProperty_FromStr_Role_Pass() {
+		$fmt = SpringDvs\NodeProperty::fromStr("role");
+		$this->assertEquals($fmt->get(), SpringDvs\NodeProperty::Role);
+		$this->assertEquals($fmt->value(), null);
+	
+		$fmt = SpringDvs\NodeProperty::fromStr("role hybrid");
+		$this->assertEquals($fmt->get(), SpringDvs\NodeProperty::Role);
+		$this->assertEquals($fmt->value(), SpringDvs\NodeRole::Hybrid);
+	}
+	
+	public function testNodeProperty_ToStr_Role_Pass() {
+		$fmt = SpringDvs\NodeProperty::fromStr("role");
+		$this->assertEquals($fmt->toStr(), "role");
+	
+		$fmt = SpringDvs\NodeProperty::fromStr("role hybrid");
+		$this->assertEquals($fmt->toStr(), "role hybrid");
+	}
+
+	public function testNodeProperty_FromStr_Service_Pass() {
+		$fmt = SpringDvs\NodeProperty::fromStr("service");
+		$this->assertEquals($fmt->get(), SpringDvs\NodeProperty::Service);
+		$this->assertEquals($fmt->value(), null);
+	
+		$fmt = SpringDvs\NodeProperty::fromStr("service http");
+		$this->assertEquals($fmt->get(), SpringDvs\NodeProperty::Service);
+		$this->assertEquals($fmt->value(), SpringDvs\NodeService::Http);
+	}
+	
+	public function testNodeProperty_ToStr_Service_Pass() {
+		$fmt = SpringDvs\NodeProperty::fromStr("service");
+		$this->assertEquals($fmt->toStr(), "service");
+	
+		$fmt = SpringDvs\NodeProperty::fromStr("service http");
+		$this->assertEquals($fmt->toStr(), "service http");
+	}
+	
+	public function testNodeProperty_FromStr_State_Pass() {
+		$fmt = SpringDvs\NodeProperty::fromStr("state");
+		$this->assertEquals($fmt->get(), SpringDvs\NodeProperty::State);
+		$this->assertEquals($fmt->value(), null);
+	
+		$fmt = SpringDvs\NodeProperty::fromStr("state enabled");
+		$this->assertEquals($fmt->get(), SpringDvs\NodeProperty::State);
+		$this->assertEquals($fmt->value(), SpringDvs\NodeState::Enabled);
+	}
+	
+	public function testNodeProperty_ToStr_State_Pass() {
+		$fmt = SpringDvs\NodeProperty::fromStr("state");
+		$this->assertEquals($fmt->toStr(), "state");
+	
+		$fmt = SpringDvs\NodeProperty::fromStr("state enabled");
+		$this->assertEquals($fmt->toStr(), "state enabled");
 	}
 }
