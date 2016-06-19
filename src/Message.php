@@ -23,7 +23,7 @@ class Message implements IProtocolObject {
 		$parts = explode(" ", $str, 2);
 		
 		if(is_numeric($parts[0])) {
-			return new Message(new CmdType(CmdType::Response), ProtocolResponse::fromStr($str));
+			return new Message(new CmdType(CmdType::Response), ContentResponse::fromStr($str));
 		}
 		$cmd = CmdType::fromStr($parts[0]);
 		$content = null;
@@ -51,7 +51,7 @@ class Message implements IProtocolObject {
 				$content = ContentService::fromStr($parts[1]);
 				break;
 			case CmdType::Response:
-				$content = ContentResponse::fromStr($parts[1]);
+				$content = ContentResponse::fromStr($str);
 				break;
 		}
 		
@@ -87,8 +87,8 @@ class Message implements IProtocolObject {
 				$ops = $this->_content == null ? "" : $this->_content->toStr();
 				break;
 			case CmdType::Response:
-				$cmd = "";
-				$ops = $this->_content == null ? "" : $this->_content->toStr();
+				$ops = "";
+				$cmd = $this->_content == null ? "" : $this->_content->toStr();
 				break;
 		}
 		

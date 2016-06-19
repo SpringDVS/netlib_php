@@ -6,6 +6,7 @@ use SpringDvs\ContentInfoRequest;
 use SpringDvs\NodeProperty;
 use SpringDvs\NodeState;
 use SpringDvs\ProtocolResponse;
+use SpringDvs\ContentResponse;
 
 include 'auto.php';
 
@@ -275,7 +276,7 @@ class MessagesTest extends PHPUnit_Framework_TestCase {
 	public function testMessage_FromStr_Response_Empty_Pass() {
 		$mct = \SpringDvs\Message::fromStr("200");
 		$this->assertEquals($mct->cmd(), CmdType::Response);
-		$this->assertEquals($mct->content()->get(), ProtocolResponse::Ok);
+		$this->assertEquals($mct->content()->code(), ProtocolResponse::Ok);
 	}
 	
 	public function testMessage_ToStr_Response_Empty_Pass() {
@@ -287,13 +288,28 @@ class MessagesTest extends PHPUnit_Framework_TestCase {
 	public function testMessage_FromStr_Response_NodeInfo_Pass() {
 		$mct = \SpringDvs\Message::fromStr("200 node spring:foobar,host:foo.bar");
 		$this->assertEquals($mct->cmd(), CmdType::Response);
-		$this->assertEquals($mct->content()->get(), ProtocolResponse::Ok);
-		$this->assertEquals($mct->content()->value()->spring(), "foobar");
-		$this->assertEquals($mct->content()->value()->host(), "foo.bar");
+		$this->assertEquals($mct->content()->code(), ProtocolResponse::Ok);
+		$this->assertEquals($mct->content()->type(), ContentResponse::NodeInfo);
+		$this->assertEquals($mct->content()->content()->spring(), "foobar");
+		$this->assertEquals($mct->content()->content()->host(), "foo.bar");
 	}
 	
 	public function testMessage_ToStr_Response_NodeInfo_Pass() {
-		$mct = \SpringDvs\Message::fromStr("200 node spring:foobar,host:foo.bar");
-		$this->assertEquals($mct->toStr(), "200 node spring:foobar,host:foo.bar");
+		$mct = \SpringDvs\Message::fromStr("200 node host:foo.bar");
+		$this->assertEquals($mct->toStr(), "200 node host:foo.bar");
+	}
+	
+	public function testMessage_FromStr_Response_Network_Pass() {
+		$mct = \SpringDvs\Message::fromStr("200 network foobar,foo.bar,127.0.0.1,http;barfoo,bar.foo,192.168.1.1,dvsp");
+		$this->assertEquals($mct->cmd(), CmdType::Response);
+		$this->assertEquals($mct->content()->code(), ProtocolResponse::Ok);
+		$this->assertEquals($mct->content()->type(), ContentResponse::Network);
+		$this->assertEquals($mct->content()->content()->nodes()[0]->spring(), "foobar");
+		$this->assertEquals($mct->content()->content()->nodes()[1]->spring(), "barfoo");
+	}
+	
+	public function testMessage_ToStr_Response_Network_Pass() {
+		$mct = \SpringDvs\Message::fromStr("200 network foobar,foo.bar,127.0.0.1,http;barfoo,bar.foo,192.168.1.1,dvsp");
+		$this->assertEquals($mct->toStr(), "200 network foobar,foo.bar,127.0.0.1,http;barfoo,bar.foo,192.168.1.1,dvsp");
 	}
 }
