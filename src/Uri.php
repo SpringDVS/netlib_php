@@ -18,14 +18,14 @@ class Uri {
 	private $_res;
 	private $_query;
 	
-	public function __construct($url = '') {
-		$staticRoute = array();
-		if($url == "") return;
+	public function __construct($uri = '') {
 		
-		if(substr($url, 0, 9) != 'spring://')
+		if($uri == "") return;
+		
+		if(substr($uri, 0, 9) != 'spring://')
 			throw new Exception ("Malformed URL");
 		
-		$a = explode('?', substr($url,9), 2);
+		$a = explode('?', substr($uri,9), 2);
 		if(isset($a[1])) {
 			$this->_query = $a[1];
 		}
@@ -76,29 +76,29 @@ class Uri {
 	}
 	
 	public function toStr() {
-		$url = "spring://";
+		$uri = "spring://";
 		
 		$last = count($this->_route) - 1;
 		foreach($this->_route as $i => $r) {
-			$url .= $r;
+			$uri .= $r;
 			if($i < $last)
-				$url .= '.';
+				$uri .= '.';
 		}
 		
 		if(!empty($this->_glq)) {
-			$url .= ":{$this->_glq}";
+			$uri .= ":{$this->_glq}";
 		}
 
 		if(!empty($this->_res)) {
 			$res = implode("/", $this->_res);
-			$url .= "/{$res}";
+			$uri .= "/{$res}";
 		}
 
 		if(!empty($this->_query)) {
-			$url .= "?{$this->_query}";
+			$uri .= "?{$this->_query}";
 		}
 		
-		return $url;
+		return $uri;
 	}
 	
 	public function pop() {
