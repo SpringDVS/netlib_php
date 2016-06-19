@@ -159,4 +159,14 @@ class MessagesTest extends PHPUnit_Framework_TestCase {
 		$mct = \SpringDvs\ContentService::fromStr("spring://a.b.c.uk:glq/foobar");
 		$this->assertEquals($mct->toStr(), "spring://a.b.c.uk:glq/foobar");
 	}
+	
+	public function testContentNodeSingle_FromStr_Pass() {
+		$mct = \SpringDvs\ContentNodeSingle::fromStr("foobar");
+		$this->assertEquals($mct->spring(), "foobar");
+	}
+	
+	public function testContentNodeSingle_ToStr_Pass() {
+		$mct = \SpringDvs\ContentNodeSingle::fromStr("foobar");
+		$this->assertEquals($mct->toStr(), "foobar");
+	}
 }
