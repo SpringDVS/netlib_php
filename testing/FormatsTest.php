@@ -111,4 +111,9 @@ class FormatsTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($fmt->nodes()[0]->host(), "foo.bar");
 		$this->assertEquals($fmt->nodes()[1]->host(), "bar.foo");
 	}
+	
+	public function testNetwork_ToStr_Pass() {
+		$fmt = SpringDvs\NetworkFmt::fromStr("foobar,foo.bar,127.0.0.1,http;barfoo,bar.foo,192.168.1.1,dvsp");
+		$this->assertEquals($fmt->toStr(), "foobar,foo.bar,127.0.0.1,http;barfoo,bar.foo,192.168.1.1,dvsp");
+	}
 }
