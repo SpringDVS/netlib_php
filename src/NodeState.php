@@ -28,10 +28,10 @@ class NodeState implements IProtocolObject, IEnum {
 
 	public function toStr() {
 		switch ($this->_state) {
-			case NodeState::Disabled: echo "disabled"; break;
-			case NodeState::Enabled: echo "enabled"; break;
-			case NodeState::Unresponsive: echo "unresponsive"; break;
-			default: echo "unspecified"; break;
+			case NodeState::Disabled: return "disabled"; break;
+			case NodeState::Enabled: return "enabled"; break;
+			case NodeState::Unresponsive: return "unresponsive"; break;
+			default: return "unspecified"; break;
 		}
 	}
 }
