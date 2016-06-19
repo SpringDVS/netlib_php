@@ -19,15 +19,15 @@ class NodeService implements IProtocolObject, IEnum {
 		switch ($str) {
 			case "dvsp": return new NodeService(NodeService::Dvsp);
 			case "http": return new NodeService(NodeService::Http);
-			default: return new NodeService(NodeService::Unknown);
+			default:     return new NodeService(NodeService::Unknown);
 		}
 	}
 	
 	public function toStr() {
 		switch ($this->_service) {
-			case NodeService::Dvsp: echo "dvsp"; break;
-			case NodeService::Http: echo "http"; break;
-			default: echo "unknown"; break;
+			case NodeService::Dvsp: return "dvsp";    break;
+			case NodeService::Http: return "http";    break;
+			default:                return "unknown"; break;
 		}
 	}
 }
