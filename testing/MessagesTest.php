@@ -59,4 +59,23 @@ class MessagesTest extends PHPUnit_Framework_TestCase {
 		\SpringDvs\ContentInfoRequest::fromStr("node void");
 		\SpringDvs\ContentInfoRequest::fromStr("n");
 	}
+
+
+
+	public function testContentUpdate_FromStr_Pass() {
+		$mct = \SpringDvs\ContentUpdate::fromStr("state enabled");
+		$this->assertEquals($mct->type(), \SpringDvs\NodeProperty::State);
+		$this->assertEquals($mct->value(), \SpringDvs\NodeState::Enabled);
+	}
+	
+	public function testContentUpdate_ToStr_Pass() {
+		$mct = \SpringDvs\ContentUpdate::fromStr("state enabled");
+		$this->assertEquals($mct->toStr(), "state enabled");
+	}
+	
+	public function testContentUpdate_FromStr_Fail() {
+		$this->setExpectedException('\SpringDvs\ParseFailure');
+		\SpringDvs\ContentUpdate::fromStr("brain enabled");
+	}
+
 }
