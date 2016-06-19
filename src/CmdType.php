@@ -38,12 +38,12 @@ class CmdType implements IProtocolObject, IEnum {
 	
 	public function toStr() {
 		switch($this->_type) {
-			case CmdType::Register:   echo "register";   break;
-			case CmdType::Unregister: echo "unregister"; break;
-			case CmdType::Info:       echo "info";       break;
-			case CmdType::Update:     echo "update";     break;
-			case CmdType::Resolve:    echo "resolve";    break;
-			case CmdType::Service:    echo "service";    break;
+			case CmdType::Register:   return "register";   break;
+			case CmdType::Unregister: return "unregister"; break;
+			case CmdType::Info:       return "info";       break;
+			case CmdType::Update:     return "update";     break;
+			case CmdType::Resolve:    return "resolve";    break;
+			case CmdType::Service:    return "service";    break;
 			default: break;
 		}
 	}
