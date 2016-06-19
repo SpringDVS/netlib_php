@@ -1,6 +1,4 @@
 <?php
-use SpringDvs\NodeService;
-
 include 'auto.php';
 
 class FormatsTest extends PHPUnit_Framework_TestCase {
@@ -63,7 +61,7 @@ class FormatsTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($fmt->spring(), "spring" );
 		$this->assertEquals($fmt->host(), "host" );
 		$this->assertEquals($fmt->address(), "127.0.0.1" );
-		$this->assertEquals($fmt->service(), NodeService::Http );
+		$this->assertEquals($fmt->service(), SpringDvs\NodeService::Http );
 	}
 	
 	public function testNodeQuad_ToStr_Pass() {
@@ -76,5 +74,40 @@ class FormatsTest extends PHPUnit_Framework_TestCase {
 	public function testNodeQuad_FromStr_Fail() {
 		$this->setExpectedException('\SpringDvs\ParseFailure');
 		$fmt = SpringDvs\NodeQuadFmt::fromStr("spring,host");
+	}
+	
+	
+	public function testNodeInfo_FromStr_Full_Pass() {
+		$fmt = SpringDvs\NodeInfoFmt::fromStr("spring:foobar,host:foo.bar,address:127.0.0.1,service:http,role:hybrid,state:enabled");
+		$this->assertEquals($fmt->spring(), "foobar" );
+		$this->assertEquals($fmt->host(), "foo.bar" );
+		$this->assertEquals($fmt->address(), "127.0.0.1" );
+		$this->assertEquals($fmt->service(), SpringDvs\NodeService::Http );
+		$this->assertEquals($fmt->role(), SpringDvs\NodeRole::Hybrid );
+		$this->assertEquals($fmt->state(), SpringDvs\NodeState::Enabled );
+	}
+	
+	public function testNodeInfo_FromStr_Partial_Pass() {
+		$fmt = SpringDvs\NodeInfoFmt::fromStr("spring:foobar,address:127.0.0.1,role:hybrid,state:enabled");
+		$this->assertEquals($fmt->spring(), "foobar" );
+		$this->assertEquals($fmt->host(), "" );
+		$this->assertEquals($fmt->address(), "127.0.0.1" );
+		$this->assertEquals($fmt->service(), SpringDvs\NodeService::Unknown );
+		$this->assertEquals($fmt->role(), SpringDvs\NodeRole::Hybrid );
+		$this->assertEquals($fmt->state(), SpringDvs\NodeState::Enabled );
+	}
+	
+	public function testNodeInfo_ToStr_Full_Pass() {
+		$fmt = SpringDvs\NodeInfoFmt::fromStr("spring:foobar,host:foo.bar,address:127.0.0.1,service:http,role:hybrid,state:enabled");
+		ob_start();
+		$fmt->toStr();
+		$this->assertEquals(ob_get_clean(), "spring:foobar,host:foo.bar,address:127.0.0.1,service:http,role:hybrid,state:enabled" );
+	}
+	
+	public function testNodeInfo_ToStr_Partial_Pass() {
+		$fmt = SpringDvs\NodeInfoFmt::fromStr("spring:foobar,host:foo.bar,address:127.0.0.1,service:http,state:enabled");
+		ob_start();
+		$fmt->toStr();
+		$this->assertEquals(ob_get_clean(), "spring:foobar,host:foo.bar,address:127.0.0.1,service:http,state:enabled" );
 	}
 }
