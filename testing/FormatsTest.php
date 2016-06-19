@@ -93,15 +93,22 @@ class FormatsTest extends PHPUnit_Framework_TestCase {
 	
 	public function testNodeInfo_ToStr_Full_Pass() {
 		$fmt = SpringDvs\NodeInfoFmt::fromStr("spring:foobar,host:foo.bar,address:127.0.0.1,service:http,role:hybrid,state:enabled");
-		ob_start();
-		$fmt->toStr();
-		$this->assertEquals(ob_get_clean(), "spring:foobar,host:foo.bar,address:127.0.0.1,service:http,role:hybrid,state:enabled" );
+		$this->assertEquals($fmt->toStr(), "spring:foobar,host:foo.bar,address:127.0.0.1,service:http,role:hybrid,state:enabled" );
 	}
 	
 	public function testNodeInfo_ToStr_Partial_Pass() {
 		$fmt = SpringDvs\NodeInfoFmt::fromStr("spring:foobar,host:foo.bar,address:127.0.0.1,service:http,state:enabled");
-		ob_start();
-		$fmt->toStr();
-		$this->assertEquals(ob_get_clean(), "spring:foobar,host:foo.bar,address:127.0.0.1,service:http,state:enabled" );
+		$this->assertEquals($fmt->toStr(), "spring:foobar,host:foo.bar,address:127.0.0.1,service:http,state:enabled" );
+	}
+	
+	
+	
+	public function testNetwork_FromStr_Pass() {
+		$fmt = SpringDvs\NetworkFmt::fromStr("foobar,foo.bar,127.0.0.1,http;barfoo,bar.foo,192.168.1.1,dvsp");
+		$this->assertEquals(count($fmt->nodes()), 2);
+		$this->assertEquals($fmt->nodes()[0]->spring(), "foobar");
+		$this->assertEquals($fmt->nodes()[1]->spring(), "barfoo");
+		$this->assertEquals($fmt->nodes()[0]->host(), "foo.bar");
+		$this->assertEquals($fmt->nodes()[1]->host(), "bar.foo");
 	}
 }

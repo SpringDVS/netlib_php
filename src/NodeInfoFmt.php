@@ -92,7 +92,7 @@ class NodeInfoFmt implements IProtocolObject {
 			array_push($l, "state:{$this->_state->toStr()}"); 
 		}
 		
-		echo implode(",", $l);
+		return implode(",", $l);
 		
 	}
 }
