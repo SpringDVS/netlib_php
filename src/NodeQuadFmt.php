@@ -41,7 +41,6 @@ class NodeQuadFmt implements IProtocolObject {
 	}
 
 	public function toStr() {
-		echo "{$this->_spring},{$this->_host},{$this->_address},";
-		$this->_service->toStr();
+		return "{$this->_spring},{$this->_host},{$this->_address},{$this->_service->toStr()}";
 	}
 }
