@@ -70,6 +70,15 @@ class FormatsTest extends PHPUnit_Framework_TestCase {
 		$fmt = SpringDvs\NodeQuadFmt::fromStr("spring,host");
 	}
 	
+	public function testNodeQuad_ToJsonArray_Pass() {
+		$fmt = SpringDvs\NodeQuadFmt::fromStr("spring,host,127.0.0.1,http");
+		$ja = $fmt->toJsonArray();
+		$this->assertEquals($ja['spring'], "spring" );
+		$this->assertEquals($ja['host'], "host" );
+		$this->assertEquals($ja['address'], "127.0.0.1" );
+		$this->assertEquals($ja['service'], "http" );
+	}
+	
 	
 	public function testNodeInfo_FromStr_Full_Pass() {
 		$fmt = SpringDvs\NodeInfoFmt::fromStr("spring:foobar,host:foo.bar,address:127.0.0.1,service:http,role:hybrid,state:enabled");
@@ -101,7 +110,28 @@ class FormatsTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($fmt->toStr(), "spring:foobar,host:foo.bar,address:127.0.0.1,service:http,state:enabled" );
 	}
 	
-	
+	public function testNodeInfo_ToJsonArray_Full_Pass() {
+		$fmt = SpringDvs\NodeInfoFmt::fromStr("spring:foobar,host:foo.bar,address:127.0.0.1,service:http,role:hybrid,state:enabled");
+		$ja = $fmt->toJsonArray();
+		$this->assertEquals($ja['spring'], "foobar" );
+		$this->assertEquals($ja['host'], "foo.bar" );
+		$this->assertEquals($ja['address'], "127.0.0.1" );
+		$this->assertEquals($ja['service'], "http" );
+		$this->assertEquals($ja['role'], "hybrid" );
+		$this->assertEquals($ja['state'], "enabled" );
+	}
+
+	public function testNodeInfo_ToJsonArray_Partial_Pass() {
+		$fmt = SpringDvs\NodeInfoFmt::fromStr("spring:foobar,host:foo.bar,service:http,role:hybrid,state:enabled");
+		$ja = $fmt->toJsonArray();
+		$this->assertEquals($ja['spring'], "foobar" );
+		$this->assertEquals($ja['host'], "foo.bar" );
+		$this->assertEquals(isset($ja['address']), false );
+		$this->assertEquals($ja['service'], "http" );
+		$this->assertEquals($ja['role'], "hybrid" );
+		$this->assertEquals($ja['state'], "enabled" );
+	}
+
 	
 	public function testNetwork_FromStr_Pass() {
 		$fmt = SpringDvs\NetworkFmt::fromStr("foobar,foo.bar,127.0.0.1,http;barfoo,bar.foo,192.168.1.1,dvsp");
@@ -115,5 +145,17 @@ class FormatsTest extends PHPUnit_Framework_TestCase {
 	public function testNetwork_ToStr_Pass() {
 		$fmt = SpringDvs\NetworkFmt::fromStr("foobar,foo.bar,127.0.0.1,http;barfoo,bar.foo,192.168.1.1,dvsp");
 		$this->assertEquals($fmt->toStr(), "foobar,foo.bar,127.0.0.1,http;barfoo,bar.foo,192.168.1.1,dvsp");
+	}
+	
+	public function testNetwork_ToJsonArray_Pass() {
+		$fmt = SpringDvs\NetworkFmt::fromStr("foobar,foo.bar,127.0.0.1,http;barfoo,bar.foo,192.168.1.1,dvsp");
+		$ja = $fmt->toJsonArray();
+
+		$this->assertEquals(count($ja), 2);
+		$this->assertEquals($ja[0]['spring'], "foobar");
+		$this->assertEquals($ja[1]['spring'], "barfoo");
+		
+		$this->assertEquals($ja[0]['host'], "foo.bar");
+		$this->assertEquals($ja[1]['host'], "bar.foo");
 	}
 }
