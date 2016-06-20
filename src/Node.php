@@ -1,0 +1,197 @@
+<?php
+
+namespace SpringDvs;
+
+class Node {
+	private $_spring;
+	private $_host;
+	private $_address;
+	private $_service;
+	private $_state;
+	private $_role;
+	
+	public function __construct($spring, $host = "", $address = "", 
+								$service = NodeService::Unknown,
+								$state = NodeState::Unspecified, 
+								$role = NodeRole::Unknown) 
+	{
+		$this->_spring = $spring;
+		$this->_host = $host;
+		$this->_address = $address;
+		
+		$this->_service = is_numeric($service) ? new NodeService($service) : $service;
+		$this->_state = is_numeric($state)     ? new NodeState($state)     : $state;
+		$this->_role = is_numeric($role)       ? new NodeRole($role)       : $role;
+	}
+
+	public static function from_str($str) {
+		if(strpos($str, ":") !== false) {
+			return Node::fromNodeInfo(NodeInfoFmt::fromStr($str));
+		}
+		
+		$parts = explode(",", $str);
+		
+		switch(count($parts)) {
+			case 1:  return Node::fromNodeSingle(NodeSingleFmt::fromStr($str));
+			case 2:  return Node::fromNodeDouble(NodeDoubleFmt::fromStr($str));
+			case 3:  return Node::fromNodeTriple(NodeTripleFmt::fromStr($str));
+			case 4:  return Node::fromNodeQuad(NodeQuadFmt::fromStr($str));
+			default: throw new ParseFailure(ParseFailure::InvalidContentFormat);
+		}
+	}
+
+	/**
+	 * Get the Springnanme
+	 * @return string
+	 */
+	public function spring() {
+		return $this->_spring;
+	}
+	
+	/**
+	 * Get the Hostname
+	 * @return string
+	 */
+	public function host() {
+		return $this->_host;
+	}
+	
+	/**
+	 * Get the address
+	 * @return string
+	 */
+	public function address() {
+		return $this->_address;
+	}
+	
+	/**
+	 * Get the service protocol
+	 * @return \SpringDvs\NodeService
+	 */
+	public function service() {
+		return $this->_service->get();
+	}
+	
+	/**
+	 * Get the current state
+	 * @return \SpringDvs\NodeState
+	 */
+	public function state() {
+		return $this->_state->get();
+	}
+	
+	/**
+	 * Get types of roles the node performs
+	 * 
+	 * @return \SpringDvs\NodeRole
+	 */
+	public function role() {
+		return $this->_role->get();
+	}
+
+	/**
+	 * Update the service protocol of the node
+	 * @param SpringDvs\DvspService $service
+	 */
+	public function updateService(NodeService $service) {
+		$this->_service = $service;
+	}
+	
+	/**
+	 * Update the types of roles of the node
+	 * 
+	 * @param Bitfield $roles
+	 */
+	public function updateRoles(NodeRole $role) {
+		$this->_role = $role;
+	}
+
+	/**
+	 * Update the state of the node
+	 * @param SpringDvs\DvspNode $state
+	 */	
+	public function updateState(NodeState $state) {
+		$this->_state = $state;
+	}
+	
+	/**
+	 * Generate a NodeSingle format of node
+	 * @return SpringDvs\NodeSingle
+	 */
+	public function toNodeSingle() {
+		return new NodeSingleFmt($this->_spring);
+	}
+	
+	/**
+	 * Generate a Node from NodeSingle format
+	 * @return \SpringDvs\Node
+	 */
+	public static function fromNodeSingle(NodeSingleFmt $fmt) {
+		return new Node($fmt->spring());
+	}
+	
+	/**
+	 * Generate a NodeDouble format of node
+	 * @return SpringDvs\NodeDoubleFmt
+	 */
+	public function toNodeDouble() {
+		return new NodeDoubleFmt($this->_spring, $this->_host);
+	}
+	
+	/**
+	 * Generate a Node from NodeDouble format
+	 * @return \SpringDvs\Node
+	 */
+	public static function fromNodeDouble(NodeDoubleFmt $fmt) {
+		return new Node($fmt->spring(), $fmt->host());
+	}
+	
+	/**
+	 * Generate a NodeTriple format of node
+	 * @return SpringDvs\NodeTripleFmt
+	 */
+	public function toNodeTriple() {
+		return new NodeTripleFmt($this->_spring, $this->_host, $this->_address);
+	}
+	
+	/**
+	 * Generate a Node from NodeTriple format
+	 * @return \SpringDvs\Node
+	 */
+	public static function fromNodeTriple(NodeTripleFmt $fmt) {
+		return new Node($fmt->spring(), $fmt->host(), $fmt->address());
+	}
+
+	/**
+	 * Generate a NodeQuad format of node
+	 * @return SpringDvs\NodeQuadFmt
+	 */
+	public function toNodeQuad() {
+		return new NodeQuadFmt($this->_spring, $this->_host, $this->_address, $this->_service);
+	}
+	
+	/**
+	 * Generate a Node from NodeQuad format
+	 * @return \SpringDvs\Node
+	 */
+	public static function fromNodeQuad(NodeQuadFmt $fmt) {
+		return new Node($fmt->spring(), $fmt->host(), $fmt->address(), $fmt->service());
+	}
+
+	/**
+	 * Generate a NodeInfo format of node
+	 * @return SpringDvs\NodeInfoFmt
+	 */
+	public function toNodeInfo() {
+		return new NodeInfoFmt($this->_spring, $this->_host, $this->_address, $this->_service, $this->_role, $this->_state);
+	}
+	
+	/**
+	 * Generate a Node from NodeInfo format
+	 * @return \SpringDvs\Node
+	 */
+	public static function fromNodeInfo(NodeInfoFmt $fmt) {
+		return new Node($fmt->spring(), $fmt->host(), $fmt->address(),
+						$fmt->service(), $fmt->state(), $fmt->role());
+	}
+}
