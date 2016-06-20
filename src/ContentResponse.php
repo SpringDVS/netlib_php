@@ -5,7 +5,7 @@
  */
 namespace SpringDvs;
 
-class ContentResponse implements IProtocolObject {
+class ContentResponse implements IProtocolObject, IJson {
 	const EmptyContent = 0;
 	const NodeInfo = 1;
 	const Network = 2;
@@ -72,5 +72,22 @@ class ContentResponse implements IProtocolObject {
 				return $this->_code->toStr().' network '.$this->_content->toStr();
 				break;
 		}
+	}
+	
+	public function toJsonArray() {
+		$type = "";
+		
+		switch($this->_type) {
+			case ContentResponse::NodeInfo: $type = 'node';    break;
+			case ContentResponse::Network:  $type = 'network'; break;
+			default: break;
+		}
+		
+		return array(
+			'code' => $this->_code->toStr(),
+			'type' => $type,
+			'content' => $this->_type == ContentResponse::EmptyContent ? 
+							'' : $this->_content->toJsonArray() 
+		);
 	}
 }

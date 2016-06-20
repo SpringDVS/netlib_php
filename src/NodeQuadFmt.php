@@ -6,13 +6,13 @@
 
 namespace SpringDvs;
 
-class NodeQuadFmt implements IProtocolObject {
+class NodeQuadFmt implements IProtocolObject, IJson {
 	private $_spring;
 	private $_host;
 	private $_address;
 	private $_service;
 
-	public function __construct($spring,$host,$address,$service) {
+	public function __construct($spring,$host,$address, NodeService $service) {
 		$this->_spring = $spring;
 		$this->_host = $host;
 		$this->_address = $address;
@@ -46,5 +46,14 @@ class NodeQuadFmt implements IProtocolObject {
 
 	public function toStr() {
 		return "{$this->_spring},{$this->_host},{$this->_address},{$this->_service->toStr()}";
+	}
+	
+	public function toJsonArray() {
+		return array(
+			'spring' => $this->_spring,
+			'host' => $this->_host,
+			'address' => $this->_address,
+			'service' => $this->_service->toStr()
+		);
 	}
 }

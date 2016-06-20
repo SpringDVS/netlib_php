@@ -6,7 +6,7 @@
 
 namespace SpringDvs;
 
-class NetworkFmt implements IProtocolObject {
+class NetworkFmt implements IProtocolObject, IJson {
 
 	private $_nodes;
 
@@ -36,5 +36,15 @@ class NetworkFmt implements IProtocolObject {
 		}
 			
 		return implode(";", $nodes);
+	}
+	
+	public function toJsonArray() {
+		$nodes = array();
+
+		foreach($this->_nodes as $n) {
+			array_push($nodes, $n->toJsonArray());
+		}
+
+		return $nodes;
 	}
 }

@@ -5,7 +5,7 @@
  */
 namespace SpringDvs;
 
-class NodeInfoFmt implements IProtocolObject {
+class NodeInfoFmt implements IProtocolObject, IJson {
 	private $_spring;
 	private $_host;
 	private $_address;
@@ -97,5 +97,35 @@ class NodeInfoFmt implements IProtocolObject {
 		
 		return implode(",", $l);
 		
+	}
+	
+	public function toJsonArray() {
+		$l = array();
+
+		if(isset($this->_spring[0])) {
+			$l['spring'] = $this->_spring; 
+		}
+		
+		if(isset($this->_host[0])) { 
+			$l['host'] = $this->_host;
+		}
+		
+		if(isset($this->_address[0])) {
+			$l['address'] = $this->_address;
+		}
+		
+		if($this->_service->get() != NodeService::Unknown) {
+			$l['service'] = $this->_service->toStr();
+		}
+		
+		if($this->_role->get() != NodeRole::Unknown) {
+			$l['role'] = $this->_role->toStr();
+		}
+		
+		if($this->_state->get() != NodeState::Unspecified) {
+			$l['state'] = $this->_state->toStr();
+		}
+		
+		return $l;		
 	}
 }

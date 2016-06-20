@@ -6,7 +6,7 @@
 
 namespace SpringDvs;
 
-class Message implements IProtocolObject {
+class Message implements IProtocolObject, IJson {
 	private $_cmd;
 	private $_content;
 	
@@ -97,6 +97,12 @@ class Message implements IProtocolObject {
 		}
 		
 		return strlen($ops) > 0 ? "{$cmd} {$ops}" : $cmd;
+	}
+	
+	public function toJsonArray() {
+		if($this->_cmd->get() != CmdType::Response) return array('code' => '201');
+		
+		return $this->_content->toJsonArray();
 	}
 	
 }
