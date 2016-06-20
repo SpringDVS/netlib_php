@@ -132,8 +132,36 @@ class MessagesTest extends PHPUnit_Framework_TestCase {
 		$mct = \SpringDvs\ContentResponse::fromStr("200 network foobar,foo.bar,127.0.0.1,http;barfoo,bar.foo,192.168.1.1,dvsp");
 		$this->assertEquals($mct->toStr(), "200 network foobar,foo.bar,127.0.0.1,http;barfoo,bar.foo,192.168.1.1,dvsp");
 	}
+
+	public function testContentResponse_ToJsonArray_EmptyContent_Pass() {
+		$mct = \SpringDvs\ContentResponse::fromStr("101");
+		$ja = $mct->toJsonArray();
+		$this->assertEquals($ja['code'], '101');
+		$this->assertEquals($ja['type'], '');
+		$this->assertEquals($ja['content'], '');
+	}
 	
+	public function testContentResponse_ToJsonArray_NodeInfo_Pass() {
+		$mct = \SpringDvs\ContentResponse::fromStr("200 node spring:foobar,host:foo.bar");
+		$ja = $mct->toJsonArray();
+		$this->assertEquals($ja['code'], '200');
+		$this->assertEquals($ja['type'], 'node');
+		$this->assertEquals($ja['content']['spring'], 'foobar');
+		$this->assertEquals($ja['content']['host'], 'foo.bar');
+		$this->assertEquals(isset($ja['content']['address']), false);
+	}
 	
+	public function testContentResponse_ToJsonArray_Network_Pass() {
+		$mct = \SpringDvs\ContentResponse::fromStr("200 network foobar,foo.bar,127.0.0.1,http;barfoo,bar.foo,192.168.1.1,dvsp");
+		$ja = $mct->toJsonArray();
+		$this->assertEquals($ja['code'], '200');
+		$this->assertEquals($ja['type'], 'network');
+		$this->assertEquals(count($ja['content']), 2);
+		$this->assertEquals($ja['content'][0]['spring'], 'foobar');
+		$this->assertEquals($ja['content'][0]['host'], 'foo.bar');
+		$this->assertEquals($ja['content'][1]['spring'], 'barfoo');
+		$this->assertEquals($ja['content'][1]['host'], 'bar.foo');
+	}
 	
 	public function testContentResolve_FromStr_Pass() {
 		$mct = \SpringDvs\ContentResolve::fromStr("spring://a.b.c.uk:glq/foobar");
@@ -311,5 +339,23 @@ class MessagesTest extends PHPUnit_Framework_TestCase {
 	public function testMessage_ToStr_Response_Network_Pass() {
 		$mct = \SpringDvs\Message::fromStr("200 network foobar,foo.bar,127.0.0.1,http;barfoo,bar.foo,192.168.1.1,dvsp");
 		$this->assertEquals($mct->toStr(), "200 network foobar,foo.bar,127.0.0.1,http;barfoo,bar.foo,192.168.1.1,dvsp");
+	}
+	
+	public function testMessage_ToJsonArray_Response_Network_Pass() {
+		$mct = \SpringDvs\Message::fromStr("200 network foobar,foo.bar,127.0.0.1,http;barfoo,bar.foo,192.168.1.1,dvsp");
+		$ja = $mct->toJsonArray();
+		$this->assertEquals($ja['code'], '200');
+		$this->assertEquals($ja['type'], 'network');
+		$this->assertEquals(count($ja['content']), 2);
+		$this->assertEquals($ja['content'][0]['spring'], 'foobar');
+		$this->assertEquals($ja['content'][0]['host'], 'foo.bar');
+		$this->assertEquals($ja['content'][1]['spring'], 'barfoo');
+		$this->assertEquals($ja['content'][1]['host'], 'bar.foo');
+	}
+	
+	public function testMessage_ToJsonArray_Fail() {
+		$mct = \SpringDvs\Message::fromStr("update foo state enabled");
+		$ja = $mct->toJsonArray();
+		$this->assertEquals($ja['code'], '201');
 	}
 }
