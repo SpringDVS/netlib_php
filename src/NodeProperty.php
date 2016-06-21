@@ -29,7 +29,7 @@ class NodeProperty implements IProtocolObject, IEnum {
 	public function value() {
 
 		
-		if($this->_value == null || is_string($this->_value)) {
+		if(!is_object($this->_value) || is_string($this->_value)) {
 			return $this->_value;
 		} else {
 			return $this->_value->get();
