@@ -6,7 +6,7 @@
 
 namespace SpringDvs;
 
-class NodeQuadFmt implements IProtocolObject, IJson {
+class NodeQuadFmt implements IProtocolObject, IJson, INodeNetInterface {
 	private $_spring;
 	private $_host;
 	private $_address;
