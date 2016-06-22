@@ -13,16 +13,17 @@ include 'auto.php';
 class MessagesTest extends PHPUnit_Framework_TestCase {
 
 	public function testContentRegistration_FromStr_Pass() {
-		$mct = \SpringDvs\ContentRegistration::fromStr("foobar,foo.bar;org;http");
+		$mct = \SpringDvs\ContentRegistration::fromStr("foobar,foo.bar;org;http;bar");
 		$this->assertEquals($mct->double()->spring(), "foobar");
 		$this->assertEquals($mct->double()->host(), "foo.bar");
 		$this->assertEquals($mct->role(), \SpringDvs\NodeRole::Org);
 		$this->assertEquals($mct->service(), \SpringDvs\NodeService::Http);
+		$this->assertEquals($mct->token(), 'bar');
 	}
 	
 	public function testContentRegistration_ToStr_Pass() {
-		$mct = \SpringDvs\ContentRegistration::fromStr("foobar,foo.bar;org;http");
-		$this->assertEquals($mct->toStr(), "foobar,foo.bar;org;http");
+		$mct = \SpringDvs\ContentRegistration::fromStr("foobar,foo.bar;org;http;bar");
+		$this->assertEquals($mct->toStr(), "foobar,foo.bar;org;http;bar");
 	}
 	
 	public function testContentRegistration_FromStr_Fail() {
@@ -118,6 +119,13 @@ class MessagesTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($mct->content()->nodes()[1]->host(), "bar.foo");
 	}
 	
+	public function testContentResponse_FromStr_ServiceText_Pass() {
+		$mct = \SpringDvs\ContentResponse::fromStr("200 service/text foobar");
+		$this->assertEquals($mct->code(), \SpringDvs\ProtocolResponse::Ok);
+		$this->assertEquals($mct->type(), \SpringDvs\ContentResponse::ServiceText);
+		$this->assertEquals($mct->content()->get(), "foobar");
+	}
+	
 	public function testContentResponse_ToStr_EmptyContent_Pass() {
 		$mct = \SpringDvs\ContentResponse::fromStr("101");
 		$this->assertEquals($mct->toStr(), "101");
@@ -131,6 +139,11 @@ class MessagesTest extends PHPUnit_Framework_TestCase {
 	public function testContentResponse_ToStr_Network_Pass() {
 		$mct = \SpringDvs\ContentResponse::fromStr("200 network foobar,foo.bar,127.0.0.1,http;barfoo,bar.foo,192.168.1.1,dvsp");
 		$this->assertEquals($mct->toStr(), "200 network foobar,foo.bar,127.0.0.1,http;barfoo,bar.foo,192.168.1.1,dvsp");
+	}
+	
+	public function testContentResponse_ToStr_ServiceText_Pass() {
+		$mct = \SpringDvs\ContentResponse::fromStr("200 service/text foobar");
+		$this->assertEquals($mct->toStr(), "200 service/text foobar");
 	}
 
 	public function testContentResponse_ToJsonArray_EmptyContent_Pass() {
@@ -163,6 +176,13 @@ class MessagesTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($ja['content'][1]['host'], 'bar.foo');
 	}
 	
+	public function testContentResponse_ToJsonArray_ServiceText_Pass() {
+		$mct = \SpringDvs\ContentResponse::fromStr("200 service/text foobar");
+		$ja = $mct->toJsonArray();
+		$this->assertEquals($ja['code'], '200');
+		$this->assertEquals($ja['type'], 'service/text');
+		$this->assertEquals($ja['content'], 'foobar');
+	}
 	public function testContentResolve_FromStr_Pass() {
 		$mct = \SpringDvs\ContentResolve::fromStr("spring://a.b.c.uk:glq/foobar");
 		$uri = $mct->uri();
@@ -216,17 +236,18 @@ class MessagesTest extends PHPUnit_Framework_TestCase {
 
 
 	public function testMessage_FromStr_Register_Pass() {
-		$mct = \SpringDvs\Message::fromStr("register foobar,foo.bar;org;http");
+		$mct = \SpringDvs\Message::fromStr("register foobar,foo.bar;org;http;bar");
 		$this->assertEquals($mct->cmd(), CmdType::Register);
 		$this->assertEquals($mct->content()->double()->spring(), "foobar");
 		$this->assertEquals($mct->content()->double()->host(), "foo.bar");
 		$this->assertEquals($mct->content()->role(), NodeRole::Org);
 		$this->assertEquals($mct->content()->service(), NodeService::Http);
+		$this->assertEquals($mct->content()->token(), 'bar');
 	}
 	
 	public function testMessage_ToStr_Register_Pass() {
-		$mct = \SpringDvs\Message::fromStr("register foobar,foo.bar;org;http");
-		$this->assertEquals($mct->toStr(), "register foobar,foo.bar;org;http");
+		$mct = \SpringDvs\Message::fromStr("register foobar,foo.bar;org;http;bar");
+		$this->assertEquals($mct->toStr(), "register foobar,foo.bar;org;http;bar");
 	}
 	
 	

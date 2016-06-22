@@ -9,6 +9,7 @@ class ContentResponse implements IProtocolObject, IJson {
 	const EmptyContent = 0;
 	const NodeInfo = 1;
 	const Network = 2;
+	const ServiceText = 3;
 
 	private $_code;
 	private $_type;
@@ -54,6 +55,10 @@ class ContentResponse implements IProtocolObject, IJson {
 				$type = ContentResponse::Network;
 				$content = NetworkFmt::fromStr($parts[2]);
 				break;
+			case "service/text":
+				$type = ContentResponse::ServiceText;
+				$content = ServiceTextFmt::fromStr($parts[2]);
+				break;
 		}
 		
 		return new ContentResponse($code, $type, $content);
@@ -67,10 +72,11 @@ class ContentResponse implements IProtocolObject, IJson {
 		switch($this->_type) {
 			case ContentResponse::NodeInfo:
 				return $this->_code->toStr().' node '.$this->_content->toStr();
-				break;
 			case ContentResponse::Network:
 				return $this->_code->toStr().' network '.$this->_content->toStr();
-				break;
+			case ContentResponse::ServiceText:
+				return $this->_code->toStr().' service/text '.$this->_content->toStr();
+			
 		}
 	}
 	
@@ -80,6 +86,7 @@ class ContentResponse implements IProtocolObject, IJson {
 		switch($this->_type) {
 			case ContentResponse::NodeInfo: $type = 'node';    break;
 			case ContentResponse::Network:  $type = 'network'; break;
+			case ContentResponse::ServiceText:  $type = 'service/text'; break;
 			default: break;
 		}
 		
