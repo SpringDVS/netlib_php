@@ -31,6 +31,10 @@ class ContentRegistration implements IProtocolObject {
 		return $this->_service->get();
 	}
 	
+	public function token() {
+		return $this->_token;
+	}
+	
 	public static function fromStr($str) {
 		$parts = explode(";", $str);
 		if(count($parts) != 4) throw new ParseFailure(ParseFailure::InvalidContentFormat);
