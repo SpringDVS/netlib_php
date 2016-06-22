@@ -22,6 +22,9 @@ class NetworkFmt implements IProtocolObject, IJson {
 		$parts = explode(";", $str);
 		$nodes = array();
 		foreach($parts as $p) {
+			
+			if(strlen($p) == 0){ continue; }
+			
 			array_push($nodes, NodeQuadFmt::fromStr($p));
 		}
 		
