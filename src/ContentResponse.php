@@ -34,7 +34,7 @@ class ContentResponse implements IProtocolObject, IJson {
 	}
 	
 	public static function fromStr($str) {
-		$parts = explode(" ", $str, 3);
+		$parts = explode(" ", $str, 4);
 		
 		$code = ProtocolResponse::fromStr($parts[0]);
 		$type = ContentResponse::EmptyContent;
@@ -42,22 +42,22 @@ class ContentResponse implements IProtocolObject, IJson {
 		
 		if(count($parts) == 1) {
 			return new ContentResponse($code);
-		} else if(!isset($parts[2])) {
+		} else if(!isset($parts[1]) || !isset($parts[2]) || !isset($parts[3])) {
 			throw new ParseFailure(ParseFailure::InvalidContentFormat);
 		}
-		
-		switch($parts[1]) {
+		$size = intval($parts[1], 10);
+		switch($parts[2]) {
 			case "node":
 				$type = ContentResponse::NodeInfo;
-				$content = NodeInfoFmt::fromStr($parts[2]);
+				$content = NodeInfoFmt::fromStr($parts[3]);
 				break;
 			case "network":
 				$type = ContentResponse::Network;
-				$content = NetworkFmt::fromStr($parts[2]);
+				$content = NetworkFmt::fromStr($parts[3]);
 				break;
 			case "service/text":
 				$type = ContentResponse::ServiceText;
-				$content = ServiceTextFmt::fromStr($parts[2]);
+				$content = ServiceTextFmt::fromStr($parts[3]);
 				break;
 		}
 		
@@ -68,18 +68,20 @@ class ContentResponse implements IProtocolObject, IJson {
 		if($this->_type == ContentResponse::EmptyContent) {
 			return $this->_code->toStr();
 		}
-		
+		$content = $this->_content->toStr();
+		$len = strlen($content);
+
 		switch($this->_type) {
 			case ContentResponse::NodeInfo:
-				return $this->_code->toStr().' node '.$this->_content->toStr();
+				return $this->_code->toStr(). ' ' . ($len+5) . ' node ' .$content;
 			case ContentResponse::Network:
-				return $this->_code->toStr().' network '.$this->_content->toStr();
+				return $this->_code->toStr(). ' ' . ($len+8) . ' network ' .$content;
 			case ContentResponse::ServiceText:
-				return $this->_code->toStr().' service/text '.$this->_content->toStr();
+				return $this->_code->toStr(). ' ' . ($len+13) . ' service/text ' .$content;
 			
 		}
 	}
-	
+
 	public function toJsonArray() {
 		$type = "";
 		

@@ -13,11 +13,13 @@ class Node {
 	private $_service;
 	private $_state;
 	private $_role;
+	private $_key;
 	
 	public function __construct($spring, $host = "", $address = "", 
 								$service = NodeService::Unknown,
 								$state = NodeState::Unspecified, 
-								$role = NodeRole::Unknown) 
+								$role = NodeRole::Unknown,
+								$key = "") 
 	{
 		$this->_spring = $spring;
 		$this->_host = $host;
@@ -26,6 +28,7 @@ class Node {
 		$this->_service = is_numeric($service) ? new NodeService($service) : $service;
 		$this->_state = is_numeric($state)     ? new NodeState($state)     : $state;
 		$this->_role = is_numeric($role)       ? new NodeRole($role)       : $role;
+		$this->_key = $key;
 	}
 
 	public static function from_str($str) {
@@ -92,7 +95,15 @@ class Node {
 	public function role() {
 		return $this->_role->get();
 	}
-
+	
+	/**
+	 * Get the public key associated with the node
+	 * 
+	 * @return String
+	 */
+	public function key() {
+		return $this->_key;
+	}
 	/**
 	 * Update the service protocol of the node
 	 * @param SpringDvs\DvspService $service
@@ -116,6 +127,14 @@ class Node {
 	 */	
 	public function updateState(NodeState $state) {
 		$this->_state = $state;
+	}
+	
+	/**
+	 * Update the public key of the node
+	 * @param SpringDvs\DvspNode $state
+	 */
+	public function updateKey($key) {
+		$this->_key = $key;
 	}
 	
 	/**

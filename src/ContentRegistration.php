@@ -11,12 +11,14 @@ class ContentRegistration implements IProtocolObject {
 	private $_role;
 	private $_service;
 	private $_token;
+	private $_key;
 	
-	public function __construct(NodeDoubleFmt $nodeDouble, NodeRole $role, NodeService $service, $token) {
+	public function __construct(NodeDoubleFmt $nodeDouble, NodeRole $role, NodeService $service, $token, $key) {
 		$this->_nodeDouble = $nodeDouble;
 		$this->_role       = $role;
 		$this->_service    = $service;
 		$this->_token      = $token;
+		$this->_key		   = $key;
 	}
 	
 	public function double() {
@@ -35,15 +37,23 @@ class ContentRegistration implements IProtocolObject {
 		return $this->_token;
 	}
 	
+	public function key() {
+		return $this->_key;
+	}
+	
 	public static function fromStr($str) {
-		$parts = explode(";", $str);
+		$sections = explode("\n", $str, 2);
+		if(count($sections) != 2) throw new ParseFailure(ParseFailure::InvalidContentFormat);
+		
+		$parts = explode(";", $sections[0]);
 		if(count($parts) != 4) throw new ParseFailure(ParseFailure::InvalidContentFormat);
 		
 		return new ContentRegistration(
 					NodeDoubleFmt::fromStr($parts[0]),
 					NodeRole::fromStr($parts[1]),
 					NodeService::fromStr($parts[2]),
-					$parts[3]
+					$parts[3],
+					$sections[1]
 				);
 	}
 	
@@ -51,6 +61,7 @@ class ContentRegistration implements IProtocolObject {
 		return $this->_nodeDouble->toStr().';'.
 		       $this->_role->toStr().';'.
 		       $this->_service->toStr().';'.
-		       $this->_token;
+		       $this->_token."\n".
+			   $this->_key;
 	}
 }
