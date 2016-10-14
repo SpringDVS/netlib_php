@@ -99,4 +99,46 @@ class ContentResponse implements IProtocolObject, IJson {
 							'' : $this->_content->toJsonArray() 
 		);
 	}
+	
+	/**
+	 * Get the content hinted as a NodeInfoFmt. If it is not NodeInfo
+	 * it returns a null
+	 * 
+	 * @return \SpringDvs\NodeInfoFmt
+	 */
+	public function getNodeInfo() {
+		if($this->_type != ContentResponse::NodeInfo) {
+			throw new \Exception("Bad content type");
+		}
+		
+		return $this->_content;
+	}
+	
+	/**
+	 * Get the content hinted as a NetworkFmt. If it is not NetworkFmt
+	 * it returns a null
+	 *
+	 * @return \SpringDvs\NetworkFmt
+	 */
+	public function getNetwork() {
+		if($this->_type != ContentResponse::Network) {
+			throw new \Exception("Bad content type");
+		}
+	
+		return $this->_content;
+	}
+	
+	/**
+	 * Get the content hinted as a ServiceTextFmt. If it is not ServiceTextFmt
+	 * it returns a null
+	 *
+	 * @return \SpringDvs\ServiceTextFmt
+	 */
+	public function getServiceText() {
+		if($this->_type != ContentResponse::ServiceText) {
+			throw new \Exception("Bad content type");
+		}
+	
+		return $this->_content;
+	}
 }
