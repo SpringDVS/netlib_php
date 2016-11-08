@@ -110,7 +110,7 @@ class MessagesTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	public function testContentResponse_FromStr_Network_Pass() {
-		$mct = \SpringDvs\ContentResponse::fromStr("200 99 network foobar,foo.bar,127.0.0.1,http;barfoo,bar.foo,192.168.1.1,dvsp");
+		$mct = \SpringDvs\ContentResponse::fromStr("200 69 network foobar,foo.bar,127.0.0.1,http;barfoo,bar.foo,192.168.1.1,dvsp");
 		$this->assertEquals($mct->code(), \SpringDvs\ProtocolResponse::Ok);
 		$this->assertEquals($mct->type(), \SpringDvs\ContentResponse::Network);
 		$this->assertEquals(count($mct->content()->nodes()), 2);
@@ -119,9 +119,9 @@ class MessagesTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($mct->content()->nodes()[0]->host(), "foo.bar");
 		$this->assertEquals($mct->content()->nodes()[1]->host(), "bar.foo");
 	}
-	
+
 	public function testContentResponse_FromStr_ServiceText_Pass() {
-		$mct = \SpringDvs\ContentResponse::fromStr("200 99 service/text foobar");
+		$mct = \SpringDvs\ContentResponse::fromStr("200 19 service/text foobar");
 		$this->assertEquals($mct->code(), \SpringDvs\ProtocolResponse::Ok);
 		$this->assertEquals($mct->type(), \SpringDvs\ContentResponse::ServiceText);
 		$this->assertEquals($mct->content()->get(), "foobar");
@@ -137,7 +137,7 @@ class MessagesTest extends PHPUnit_Framework_TestCase {
 		$mct = \SpringDvs\ContentResponse::fromStr("200 31 node spring:foobar,host:foo.bar");
 		$this->assertEquals($mct->toStr(), "200 31 node spring:foobar,host:foo.bar");
 	}
-	
+
 	public function testContentResponse_ToStr_Network_Pass() {
 
 		$mct = \SpringDvs\ContentResponse::fromStr("200 69 network foobar,foo.bar,127.0.0.1,http;barfoo,bar.foo,192.168.1.1,dvsp");
@@ -158,7 +158,7 @@ class MessagesTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	public function testContentResponse_ToJsonArray_NodeInfo_Pass() {
-		$mct = \SpringDvs\ContentResponse::fromStr("200 99 node spring:foobar,host:foo.bar");
+		$mct = \SpringDvs\ContentResponse::fromStr("200 31 node spring:foobar,host:foo.bar");
 		$ja = $mct->toJsonArray();
 		$this->assertEquals($ja['code'], '200');
 		$this->assertEquals($ja['type'], 'node');
@@ -168,7 +168,7 @@ class MessagesTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	public function testContentResponse_ToJsonArray_Network_Pass() {
-		$mct = \SpringDvs\ContentResponse::fromStr("200 99 network foobar,foo.bar,127.0.0.1,http;barfoo,bar.foo,192.168.1.1,dvsp");
+		$mct = \SpringDvs\ContentResponse::fromStr("200 69 network foobar,foo.bar,127.0.0.1,http;barfoo,bar.foo,192.168.1.1,dvsp");
 		$ja = $mct->toJsonArray();
 		$this->assertEquals($ja['code'], '200');
 		$this->assertEquals($ja['type'], 'network');
@@ -180,7 +180,7 @@ class MessagesTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	public function testContentResponse_ToJsonArray_ServiceText_Pass() {
-		$mct = \SpringDvs\ContentResponse::fromStr("200 99 service/text foobar");
+		$mct = \SpringDvs\ContentResponse::fromStr("200 19 service/text foobar");
 		$ja = $mct->toJsonArray();
 		$this->assertEquals($ja['code'], '200');
 		$this->assertEquals($ja['type'], 'service/text');
@@ -378,10 +378,34 @@ class MessagesTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($ja['content'][1]['spring'], 'barfoo');
 		$this->assertEquals($ja['content'][1]['host'], 'bar.foo');
 	}
-	
+
 	public function testMessage_ToJsonArray_Fail() {
 		$mct = \SpringDvs\Message::fromStr("update foo state enabled");
 		$ja = $mct->toJsonArray();
 		$this->assertEquals($ja['code'], '201');
+	}
+
+	public function testMessage_ServiceMulti_Head_Pass() {
+		$buf = '200 14 service/multi 201 69 103 service/text {"leaf023.local.uk":[{"title":"Test Event","uid":"5","tags":["events","network","test"]}]} 201 112 service/text {"mainline.local.uk":[{"title":"Mainline Service","uid":"4","tags":["network","services","test"]}]} 202';
+		$mct = \SpringDvs\Message::fromStr($buf);
+		$this->assertEquals($mct->toStr(), "200 14 service/multi");
+	}
+	
+	public function testMessage_ServiceMulti_Eot_Pass() {
+		$buf = '202';
+		$mct = \SpringDvs\Message::fromStr($buf);
+		$this->assertEquals($mct->toStr(), "202");
+	}
+	
+	public function testMessage_ServiceMulti_Vector_Pass() {
+		$stream = '200 14 service/multi 201 103 service/text {"leaf023.local.uk":[{"title":"Test Event","uid":"5","tags":["events","network","test"]}]} 201 112 service/text {"mainline.local.uk":[{"title":"Mainline Service","uid":"4","tags":["network","services","test"]}]} 202';
+		$mct = \SpringDvs\Message::fromStr($stream);
+		
+		$this->assertEquals($mct->getContentResponse()->type(), ContentResponse::ServiceMulti);
+ 		$messages = ContentResponse::parseServiceMulti($stream, $mct->getContentResponse()->offset());
+ 		$this->assertEquals(count($messages), 2);
+		
+ 		$this->assertEquals($messages[0]->toStr(), '201 103 service/text {"leaf023.local.uk":[{"title":"Test Event","uid":"5","tags":["events","network","test"]}]}');
+ 		$this->assertEquals($messages[1]->toStr(), '201 112 service/text {"mainline.local.uk":[{"title":"Mainline Service","uid":"4","tags":["network","services","test"]}]}');
 	}
 }

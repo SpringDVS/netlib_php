@@ -15,6 +15,8 @@ class ProtocolResponse implements IProtocolObject, IEnum {
 	const UnsupportedService = 122;
 	
 	const Ok = 200;
+	const Chunk = 201;
+	const Eot = 202;
 	
 	private $_code;
 	
@@ -35,6 +37,8 @@ class ProtocolResponse implements IProtocolObject, IEnum {
 			case "121": return new ProtocolResponse(ProtocolResponse::UnsupportedAction);
 			case "122": return new ProtocolResponse(ProtocolResponse::UnsupportedService);
 			case "200": return new ProtocolResponse(ProtocolResponse::Ok);
+			case "201": return new ProtocolResponse(ProtocolResponse::Chunk);
+			case "202": return new ProtocolResponse(ProtocolResponse::Eot);
 			default:    throw new ParseFailure(ParseFailure::InvalidContentFormat);
 		}
 	}
@@ -48,6 +52,8 @@ class ProtocolResponse implements IProtocolObject, IEnum {
 			case ProtocolResponse::UnsupportedAction: return "121";
 			case ProtocolResponse::UnsupportedService: return "122";
 			case ProtocolResponse::Ok: return "200";
+			case ProtocolResponse::Chunk: return "201";
+			case ProtocolResponse::Eot: return "202";
 		}
 	}
 }
