@@ -20,7 +20,7 @@ class Uri {
 		if($uri == "") return;
 		
 		if(substr($uri, 0, 9) != 'spring://')
-			throw new Exception ("Malformed URL");
+			throw new \Exception ("Malformed URL");
 		
 		$a = explode('?', substr($uri,9), 2);
 		if(isset($a[1])) {
