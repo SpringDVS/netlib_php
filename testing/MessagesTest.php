@@ -386,9 +386,10 @@ class MessagesTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testMessage_ServiceMulti_Head_Pass() {
-		$buf = '200 14 service/multi 201 69 103 service/text {"leaf023.local.uk":[{"title":"Test Event","uid":"5","tags":["events","network","test"]}]} 201 112 service/text {"mainline.local.uk":[{"title":"Mainline Service","uid":"4","tags":["network","services","test"]}]} 202';
+		
+		$buf = '200 14 service/multi 201 103 service/text {"leaf023.local.uk":[{"title":"Test Event","uid":"5","tags":["events","network","test"]}]} 201 112 service/text {"mainline.local.uk":[{"title":"Mainline Service","uid":"4","tags":["network","services","test"]}]} 202';
 		$mct = \SpringDvs\Message::fromStr($buf);
-		$this->assertEquals($mct->toStr(), "200 14 service/multi");
+		$this->assertEquals($mct->toStr(), $buf);
 	}
 	
 	public function testMessage_ServiceMulti_Eot_Pass() {
@@ -402,7 +403,8 @@ class MessagesTest extends PHPUnit_Framework_TestCase {
 		$mct = \SpringDvs\Message::fromStr($stream);
 		
 		$this->assertEquals($mct->getContentResponse()->type(), ContentResponse::ServiceMulti);
- 		$messages = ContentResponse::parseServiceMulti($stream, $mct->getContentResponse()->offset());
+ 		$messages = $mct->getContentResponse()->getServiceParts(); 
+ 		//ContentResponse::parseServiceMulti($stream, $mct->getContentResponse()->offset());
  		$this->assertEquals(count($messages), 2);
 		
  		$this->assertEquals($messages[0]->toStr(), '201 103 service/text {"leaf023.local.uk":[{"title":"Test Event","uid":"5","tags":["events","network","test"]}]}');

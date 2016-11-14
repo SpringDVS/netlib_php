@@ -104,7 +104,20 @@ class ContentResponse implements IProtocolObject, IJson {
 			case "service/multi":
 				$type = ContentResponse::ServiceMulti;
 				$meta += 14; // +1 for space between header and rest
+				
+				/*
+				 * ToDo:
+				 * This is combining all the chunked data into a single
+				 * message. In future -- find a way to send data in
+				 * discrete form.
+				 */
+				try {
+					$content = ContentResponse::parseServiceMulti($str, 21);
+				} catch(\Exception $e) {
+					throw new ParseFailure(ParseFailure::InvalidContentFormat);
+				}
 				$size = 0;
+				
 				break;
 		}
 		
@@ -115,7 +128,7 @@ class ContentResponse implements IProtocolObject, IJson {
 		if($this->_type == ContentResponse::EmptyContent) {
 			return $this->_code->toStr();
 		}
-		if($this->_content != null) {
+		if($this->_content != null && !is_array($this->_content)) {
 			$content = $this->_content->toStr();
 		} else {
 			$content = "";
@@ -130,7 +143,11 @@ class ContentResponse implements IProtocolObject, IJson {
 			case ContentResponse::ServiceText:
 				return $this->_code->toStr(). ' ' . ($len+13) . ' service/text ' .$content;
 			case ContentResponse::ServiceMulti:
-				return $this->_code->toStr(). ' 14 service/multi';
+				$content = "";
+				foreach($this->_content as $msg) {
+					$content .= " ". $msg->toStr();
+				}
+				return $this->_code->toStr(). ' 14 service/multi'.$content.' 202';
 			
 		}
 	}
@@ -201,6 +218,21 @@ class ContentResponse implements IProtocolObject, IJson {
 	}
 	
 	/**
+	 * Get the content hinted as an array of messages. If the
+	 * content is not made up of messages then it throws.
+	 * 
+	 * @throws \Exception if not \SpringDvs\Message[]
+	 * @return \SpringDvs\Message[]
+	 */
+	public function getServiceParts() {
+		if($this->_type != ContentResponse::ServiceMulti) {
+			throw new \Exception("Bad content type");
+		}
+		
+		return $this->_content;
+	}
+	
+	/**
 	 * Get an array of Messages that have been sent in a service/multi stream
 	 * 
 	 * Pass in from the beginning of the stream with specified offset. Offset
@@ -215,7 +247,6 @@ class ContentResponse implements IProtocolObject, IJson {
 		try {
 			while(!$isEot) {
 				$stream = substr($stream, $offset);
-
 				$msg = Message::fromStr($stream);
 				if($msg->cmd() != CmdType::Response) continue;
 				if($msg->getContentResponse()->code() == ProtocolResponse::Eot) break;
