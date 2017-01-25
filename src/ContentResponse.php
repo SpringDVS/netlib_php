@@ -26,14 +26,31 @@ class ContentResponse implements IProtocolObject, IJson {
 		$this->_meta = $meta;
 	}
 	
+	/**
+	 * Get the protocol response code of the message
+	 * 
+	 * @return \SpringDvs\ProtocolResponse
+	 */
 	public function code() {
 		return $this->_code->get();
 	}
 	
+	/*
+	 * Get the response type of the message
+	 * 
+	 * Response types are defined as const values in ContentResponse
+	 * 
+	 * @return EmptyContent | NodeInfo | Network | ServiceText | ServiceMulti
+	 */	
 	public function type() {
 		return $this->_type;
 	}
 	
+	/**
+	 * Get the raw response without any type hinting
+	 * 
+	 * @return mixed
+	 */
 	public function content() {
 		return $this->_content;
 	}
@@ -124,6 +141,10 @@ class ContentResponse implements IProtocolObject, IJson {
 		return new ContentResponse($code, $type, $size, $meta, $content);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 * @see \SpringDvs\IProtocolObject::toStr()
+	 */
 	public function toStr() {
 		if($this->_type == ContentResponse::EmptyContent) {
 			return $this->_code->toStr();
@@ -258,5 +279,13 @@ class ContentResponse implements IProtocolObject, IJson {
 		} catch(\Exception $e) {
 			throw $e;
 		}
+	}
+	
+	/**
+	 * Check if response code is OK (200)
+	 * @return boolean True if it is; otherwise false
+	 */
+	public function isOk() {
+		return $this->_code->get() == \SpringDvs\ProtocolResponse::Ok;
 	}
 }

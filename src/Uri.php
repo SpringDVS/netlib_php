@@ -68,7 +68,7 @@ class Uri {
 		return $this->_query;
 	}
 	
-	public function res() {
+	public function &res() {
 		return $this->_res;
 	}
 	

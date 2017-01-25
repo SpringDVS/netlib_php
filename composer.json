@@ -1,6 +1,6 @@
 {
-  "name": "springdvs/netlib",
-  "description": "Library for SpringDVS network layer",
+  "name": "springdvs/protolib",
+  "description": "Library for SpringDVS network layer and protocol",
   "license": "Apache-2.0",
   "version": "dev-master",
   "authors": [
@@ -15,7 +15,6 @@
   "autoload": {
     "psr-4": {
       "SpringDvs\\": "src/"
-    },
-    "files": ["src/BinHelpers.php", "src/ProtocolCommon.php"]
+    }
   }
 }

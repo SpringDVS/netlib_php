@@ -118,6 +118,18 @@ class Message implements IProtocolObject, IJson {
 		
 		return $this->_content;
 	}
+	/**
+	 * Get the content hinted as a ContentResponse object. If not response
+	 * then it returns null
+	 *
+	 * @return \SpringDvs\ContentService
+	 */
+	public function getContentService() {
+		if($this->_cmd->get() != CmdType::Service) {
+			throw new \Exception("Bad content type");
+		}
 	
+		return $this->_content;
+	}
 	
 }

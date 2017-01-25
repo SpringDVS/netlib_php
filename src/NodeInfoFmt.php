@@ -8,6 +8,7 @@ namespace SpringDvs;
 class NodeInfoFmt implements IProtocolObject, IJson, INodeNetInterface {
 	private $_spring;
 	private $_host;
+	private $_hostpath;
 	private $_address;
 	private $_service;
 	private $_role;
@@ -15,7 +16,13 @@ class NodeInfoFmt implements IProtocolObject, IJson, INodeNetInterface {
 
 	public function __construct($spring,$host,$address,$service,$role,$state) {
 		$this->_spring = $spring;
-		$this->_host = $host;
+		
+		$field = explode('/',$host, 2);
+		$this->_host = $field[0];
+		if(isset($field[1])) {
+			$this->_hostpath = $field[1];
+		}
+
 		$this->_address = $address;
 		$this->_service = $service;
 		$this->_role = $role;
@@ -30,6 +37,29 @@ class NodeInfoFmt implements IProtocolObject, IJson, INodeNetInterface {
 	public function host() {
 		return $this->_host;
 	}
+	
+	/**
+	 * Get the host field of the node
+	 *
+	 * The host field consists of hostname and hostpath
+	 * concatinated with forward slash
+	 *
+	 * @return string The hostfield
+	 */
+	public function hostField() {
+		return $this->_host . ($this->_hostpath == ''
+				? ''
+				: $this->_hostpath);
+	}
+
+	/**
+	 * Get the hostpath of the node (if any)
+	 * @return string The host path
+	 */
+	public function hostPath() {
+		return $this->_hostpath;
+	}
+
 
 	public function address() {
 		return $this->_address;

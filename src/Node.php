@@ -9,12 +9,28 @@ namespace SpringDvs;
 class Node {
 	private $_spring;
 	private $_host;
+	private $_hostpath;
 	private $_address;
 	private $_service;
 	private $_state;
 	private $_role;
 	private $_key;
 	
+	/**
+	 * Construct a new node object
+	 * 
+	 * The host parameter acts as a hostfield or just a hostname
+	 * if there is no host path. This parameter is then split into
+	 * the hostname and hostpath.
+	 * 
+	 * @param string $spring The Springname
+	 * @param string $host The hostname/hostfield
+	 * @param string $address The IP Address of the node
+	 * @param \SpringDvs\NodeService $service The service layer running (DVSP or HTTP)
+	 * @param \SpringDvs\NodeState $state Current state of node
+	 * @param \SpringDvs\NodeRole $role Current role of the node
+	 * @param string $key Ascii Armor of key
+	 */
 	public function __construct($spring, $host = "", $address = "", 
 								$service = NodeService::Unknown,
 								$state = NodeState::Unspecified, 
@@ -22,7 +38,12 @@ class Node {
 								$key = "") 
 	{
 		$this->_spring = $spring;
-		$this->_host = $host;
+		
+		$field = explode('/',$host, 2);
+		$this->_host = $field[0];
+		if(isset($field[1])) {
+			$this->_hostpath = $field[1];
+		}
 		$this->_address = $address;
 		
 		$this->_service = is_numeric($service) ? new NodeService($service) : $service;
@@ -61,6 +82,28 @@ class Node {
 	 */
 	public function host() {
 		return $this->_host;
+	}
+	
+	/**
+	 * Get the hostpath of the node (if any)
+	 * @return string The host path
+	 */
+	public function hostPath() {
+		return $this->_hostpath;
+	}
+	
+	/**
+	 * Get the host field of the node
+	 * 
+	 * The host field consists of hostname and hostpath
+	 * concatinated with forward slash
+	 * 
+	 * @return string The hostfield
+	 */
+	public function hostField() {
+		return $this->_host . ($this->_hostpath == ''
+					? ''
+					: $this->_hostpath);
 	}
 	
 	/**

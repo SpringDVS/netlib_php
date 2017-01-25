@@ -5,11 +5,15 @@
  */
 namespace SpringDvs;
 
+/**
+ * An object that maps response codes 
+ */
 class ProtocolResponse implements IProtocolObject, IEnum {
 	const NetspaceError = 101;
 	const NetspaceDuplication = 102;
 	const NetworkError = 103;
 	const MalformedContent = 104;
+	const InternalError = 105;
 	
 	const UnsupportedAction  = 121;
 	const UnsupportedService = 122;
@@ -34,6 +38,7 @@ class ProtocolResponse implements IProtocolObject, IEnum {
 			case "102": return new ProtocolResponse(ProtocolResponse::NetspaceDuplication);
 			case "103": return new ProtocolResponse(ProtocolResponse::NetworkError);
 			case "104": return new ProtocolResponse(ProtocolResponse::MalformedContent);
+			case "105": return new ProtocolResponse(ProtocolResponse::InternalError);
 			case "121": return new ProtocolResponse(ProtocolResponse::UnsupportedAction);
 			case "122": return new ProtocolResponse(ProtocolResponse::UnsupportedService);
 			case "200": return new ProtocolResponse(ProtocolResponse::Ok);
@@ -49,6 +54,7 @@ class ProtocolResponse implements IProtocolObject, IEnum {
 			case ProtocolResponse::NetspaceDuplication: return "102";
 			case ProtocolResponse::NetworkError: return "103";
 			case ProtocolResponse::MalformedContent: return "104";
+			case ProtocolResponse::InternalError: return "105";
 			case ProtocolResponse::UnsupportedAction: return "121";
 			case ProtocolResponse::UnsupportedService: return "122";
 			case ProtocolResponse::Ok: return "200";
